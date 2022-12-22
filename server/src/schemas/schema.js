@@ -210,8 +210,9 @@ const itemSchema = new mongoose.Schema(
       ref: "User",
     },
     sold_at: {
-      type: Date,
+      type: Number,
     },
+
   },
   { timestamps: true }
 );

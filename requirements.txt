@@ -1,0 +1,4 @@
+dnspython==2.2.1
+pymongo==4.3.3
+python-http-client==3.3.7
+starkbank-ecdsa==2.2.0
