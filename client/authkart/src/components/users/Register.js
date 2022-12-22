@@ -8,17 +8,20 @@ const Register = () =>{
         email:"",
         password: "",
         name:"",
-        number:""
+        number:"",
+        role:"seller",
+        wallet:0
     })
 
-    const {email, password, name, number} = user
+    const {email, password, name, number, role, wallet} = user
 
     const onInputChange = (e) =>{
         setUser({...user, [e.target.name]:e.target.value})
     }
 
     const onSubmit = async (e) =>{
-        axios.post(`http://localhost:3001/users`, {email:user.email, password: user.password, name:user.name, number:user.number})
+        console.log(user)
+        axios.post(`http://localhost:3001/users`, {email:user.email, password: user.password, name:user.name, number:user.number, role:user.role, wallet:user.wallet})
         .then((resp)=>{
             setUser(resp.data)
             localStorage.setItem('user', resp.data)
@@ -77,6 +80,25 @@ const Register = () =>{
                             value={password}
                             onChange={e=>onInputChange(e)}
                         />
+                    </div>
+                    <br/>
+                    <div className="form-group">
+                        <input
+                            type="text"
+                            className="form-control form-control-lg"
+                            placeholder="Enter Wallet Amount"
+                            name="wallet"
+                            value={wallet}
+                            onChange={e=>onInputChange(e)}
+                        />
+                    </div>
+                    <br/>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Select Role</label>
+                        <select class="form-control" id="exampleFormControlSelect1">
+                            <option>Seller</option>
+                            <option>Buyer</option>
+                        </select>
                     </div>
                     <br/>
                     <button className="btn btn-warning btn-block">Sign Up</button>
