@@ -9,7 +9,7 @@ const Register = () =>{
         password: "",
         name:"",
         number:"",
-        role:"seller",
+        role:"",
         wallet:0
     })
 
@@ -20,12 +20,18 @@ const Register = () =>{
     }
 
     const onSubmit = async (e) =>{
-        console.log(user)
-        axios.post(`http://localhost:3001/users`, {email:user.email, password: user.password, name:user.name, number:user.number, role:user.role, wallet:user.wallet})
+        let body = {
+            email:user.email, 
+            password: user.password, 
+            name:user.name, number:user.number, 
+            role:user.role, 
+            wallet:user.wallet
+        }
+        console.log(body)
+        axios.post(`http://localhost:3001/users`, body)
         .then((resp)=>{
             setUser(resp.data)
             localStorage.setItem('user', resp.data)
-            navigate('/login')
         })
         .catch((err)=>{
             alert(err)
@@ -95,13 +101,15 @@ const Register = () =>{
                     <br/>
                     <div class="form-group">
                         <label for="exampleFormControlSelect1">Select Role</label>
-                        <select class="form-control" id="exampleFormControlSelect1">
+                        <select class="form-control" id="exampleFormControlSelect1"
+                        value={role}
+                        onChange={e=>onInputChange(e)}>
                             <option>Seller</option>
                             <option>Buyer</option>
                         </select>
                     </div>
                     <br/>
-                    <button className="btn btn-warning btn-block">Sign Up</button>
+                    <button className="btn btn-warning btn-block" onClick={onSubmit}>Sign Up</button>
                 </form>
             </div>
             </div>

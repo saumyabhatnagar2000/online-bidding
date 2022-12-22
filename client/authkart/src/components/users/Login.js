@@ -18,7 +18,7 @@ const Login = () =>{
     }
 
     const onSubmit = async (e) =>{
-        axios.post(`http://localhost:3001/signin`, {email:user.email, password: user.password})
+        axios.post(`http://localhost:3001/users/login`, {email:user.email, password: user.password})
         .then((resp)=>{
             setUser(resp.data)
             localStorage.setItem('user', resp.data)

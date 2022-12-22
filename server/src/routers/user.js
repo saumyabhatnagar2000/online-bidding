@@ -1,7 +1,7 @@
 const express = require("express");
 const { json } = require("express/lib/response");
 const jwt = require("jsonwebtoken");
-const User = require("../models/userModel");
+const { User } = require("../models/userModel");
 const router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -60,6 +60,7 @@ router.post("/users/login", async (req, res) => {
 });
 
 router.post("/users", async (req, res) => {
+  console.log(req.body)
   try {
     const user = new User(req.body);
     const token = await user.generateAuthToken();
