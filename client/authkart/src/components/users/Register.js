@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Seller from "./Seller";
 
 const Register = () =>{
     const [createdUser, setCreatedUser] = useState("")
@@ -35,9 +36,6 @@ const Register = () =>{
         // .catch((err)=>{
         //     alert(err)
         // })
-        if(!user.email || !user.password){
-            return alert('User email and password are required')
-        }
         setCreatedUser(true)
         // navigate('/seller/details')
         e.preventDefault();
@@ -53,6 +51,7 @@ const Register = () =>{
                                 type="text"
                                 className="form-control form-control-lg"
                                 placeholder="Enter your Email"
+                                required="true"
                                 name="email"
                                 value={email}
                                 onChange={e=>onInputChange(e)}
@@ -64,6 +63,7 @@ const Register = () =>{
                                 type="password"
                                 className="form-control form-control-lg"
                                 placeholder="Enter your password"
+                                required="true"
                                 name="password"
                                 value={password}
                                 onChange={e=>onInputChange(e)}
@@ -76,6 +76,7 @@ const Register = () =>{
                             value={role}
                             name="role"
                             onChange={e=>onInputChange(e)}>
+                                <option>Select Role</option>
                                 <option>Seller</option>
                                 <option>Buyer</option>
                             </select>
@@ -88,7 +89,7 @@ const Register = () =>{
         )
     }
     return(
-        <h1>Details</h1>
+        <Seller user={user} role={role}/>
     )
     
 }

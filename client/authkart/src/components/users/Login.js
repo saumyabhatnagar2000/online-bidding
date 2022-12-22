@@ -18,6 +18,7 @@ const Login = () =>{
     }
 
     const onSubmit = async (e) =>{
+        e.preventDefault();
         axios.post(`http://localhost:3001/user/login`, {email:user.email, password: user.password})
         .then((resp)=>{
             setUser(resp.data)
@@ -27,7 +28,6 @@ const Login = () =>{
         .catch((err)=>{
             alert(err)
         })
-        e.preventDefault();
     }
 
     return (
