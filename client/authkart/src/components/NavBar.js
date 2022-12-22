@@ -30,7 +30,7 @@ const NavBar = () => {
             </ul>:null}
           </div>
           {!user ? <Link className='btn btn-outline-light w-25' to="/login" >Sign In</Link>: null}
-          {!user ? <Link className='btn btn-outline-light w-25' to="/register" >Register</Link>: null}
+          {!user ? <Link className='btn btn-outline-light w-25' to="/register" >Create Account</Link>: null}
           {user ? <Link className='btn btn-outline-light w-25' to="/login" onClick={handleSignOut}>Sign Out</Link>: null}
           {user ? <Link className='btn btn-outline-light w-25' to="/user/add">Add Users</Link>:null}
         </div>

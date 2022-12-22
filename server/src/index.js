@@ -6,7 +6,7 @@ const itemRouter = require("./routers/items");
 const cors = require('cors');
 
 const app = express();
-app.use(cors)
+app.use(cors())
 const port = process.env.port || 3001;
 
 app.use(express.json());
