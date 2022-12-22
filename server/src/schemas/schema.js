@@ -5,69 +5,72 @@ const validator = require("validator");
 const { Timestamp } = require("mongodb");
 
 // const Task = require("../models/taskModel");
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    lowercase: true,
-    unique: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Invalid Email");
-      }
-    },
-  },
-  role: {
-    type: String,
-    required: true,
-    immutable: true,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  current_bids: [
-    {
-      current_bid: {
-        type: mongoose.Schema.Types.ObjectId,
-        trim: true,
-        ref: "",
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid Email");
+        }
       },
     },
-  ],
-
-  // number: {
-  //   type: String,
-  //   validate(value) {
-  //     if (value.length != 10) throw new Error("Number is not valid");
-  //   },
-  // },
-
-  password: {
-    type: String,
-    required: true,
-    minLength: 7,
-    trim: true,
-    validate(value) {},
-  },
-  wallet: {
-    type: Number,
-    required: true,
-    default: 0.0,
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+    role: {
+      type: String,
+      required: true,
+      immutable: true,
     },
-  ],
-  company_id: {
-    type: mongoose.Schema.Types.ObjectId,
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    current_bids: [
+      {
+        current_bid: {
+          type: mongoose.Schema.Types.ObjectId,
+          trim: true,
+          ref: "",
+        },
+      },
+    ],
+
+    // number: {
+    //   type: String,
+    //   validate(value) {
+    //     if (value.length != 10) throw new Error("Number is not valid");
+    //   },
+    // },
+
+    password: {
+      type: String,
+      required: true,
+      minLength: 7,
+      trim: true,
+      validate(value) {},
+    },
+    wallet: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
+    company_id: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
   },
-});
+  { timestamps: true }
+);
 
 const companySchema = new mongoose.Schema({
   user_id: {
@@ -204,41 +207,43 @@ const itemSchema = new mongoose.Schema(
       ref: "User",
     },
     sold_at: {
-      type: Date,
+      type: Number,
     },
   },
   { timestamps: true }
 );
 
-const listingSchema = new mongoose.Schema({
-  itemId: {
-    type: mongoose.Schema.Types.ObjectId,
+const listingSchema = new mongoose.Schema(
+  {
+    itemId: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    end_date: {
+      type: Date,
+      required: true,
+    },
+    start_date: {
+      type: Date,
+      required: true,
+    },
+    listing_type: {
+      type: String,
+    },
+    min_bid: {
+      type: Number,
+      required: true,
+    },
+    min_increment: {
+      type: Number,
+      required: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
-  end_date: {
-    type: Date,
-    required: true,
-  },
-  start_date: {
-    type: Date,
-    required: true,
-  },
-  min_bid: {
-    type: Number,
-    required: true,
-  },
-  max_bid: {
-    type: Number,
-    required: false,
-  },
-  min_increment: {
-    type: Number,
-    required: true,
-  },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-});
+  { timestamps: true }
+);
 
 const biddingSchema = new mongoose.Schema(
   {
