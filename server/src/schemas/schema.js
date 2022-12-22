@@ -196,7 +196,7 @@ const itemSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      // convert to enum
+      default: "upcoming"
     },
     specifications: {
       type: Object,
@@ -244,6 +244,10 @@ const listingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  active:{
+    type: Boolean,
+    default: true
+  }
 });
 
 const biddingSchema = new mongoose.Schema(
