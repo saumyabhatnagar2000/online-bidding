@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import {useNavigate, Link, useParams} from "react-router-dom";
 import axios from 'axios';
-
+import moment from 'moment';
 
 const Bidding = () =>{
     const { id } = useParams()
     const [bidData, setBidData] = useState()
-    const [min_bid, setMinBid] = useState() 
+    const [min_bid, setMinBid] = useState()
+    const { token } = localStorage;
+    const [biddingStart, setBiddingStart] = useState(true)
 
     useEffect(()=>{
         getAuctionData()
@@ -22,18 +24,39 @@ const Bidding = () =>{
     }
 
     const createBid = () =>{
-
+        let body = {
+            listing_id: bidData?.listing_id?._id,
+            user_id: bidData?.seller_id,
+            bid_amount: min_bid,
+            active: true
+        }
+        axios.post(`http://localhost:3001/create/bidding`, body)
+        .then((resp)=>{
+            console.log(resp.data)
+        }).catch((er)=>{
+            console.log(er)
+        })
     }
 
     const getAuctionData = () =>{
         axios.get(`http://localhost:3001/auctions/${id}`)
         .then((resp)=>{
-            setBidData(resp.data)
             console.log(resp.data)
             setMinBid(resp.data?.listing_id?.min_bid)
+            // verifyBid()
         }).catch((err)=>{
             console.log(err)
         })
+    }
+
+    const verifyBid = () =>{
+        const stDate = moment.utc(bidData?.listing_id?.start_date)
+        const enDate = moment.utc(bidData?.listing_id?.end_date)
+        if(stDate > moment(new Date()) || enDate < moment(new Date())){
+            setBiddingStart(false)
+        }else{
+            setBiddingStart(true)
+        }
     }
 
     return (
@@ -68,7 +91,7 @@ const Bidding = () =>{
             <i class="fa fa-plus" aria-hidden="true" onClick={()=>{setMinBid(min_bid+bidData?.listing_id?.min_increment)}}></i>
             <br/>
             <br/>
-            <button className="btn btn-warning btn-block">Save</button>
+            <button className="btn btn-warning btn-block" onClick={createBid} disabled={biddingStart ? false: true}>Save</button>
         </div>
       </div>
     )

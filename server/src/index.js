@@ -5,6 +5,8 @@ const taskRouter = require("./routers/task");
 const itemRouter = require("./routers/items");
 const listRouter = require("./routers/listing");
 const auctionRouter = require("./routers/auctions");
+const mailRouter = require("./routers/mail");
+
 const cors = require("cors");
 
 const app = express();
@@ -18,6 +20,7 @@ app.use(taskRouter);
 app.use(itemRouter);
 app.use(listRouter);
 app.use(auctionRouter);
+app.use(mailRouter)
 
 app.listen(port, () => {
   console.log(`Up and running on localhost://${port}`);

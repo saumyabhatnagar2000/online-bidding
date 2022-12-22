@@ -16,6 +16,8 @@ export const getItems = async (token) => {
   }
 };
 
+export const getItem = async (token) => {};
+
 export const startAuctionApi = async (data, token) => {
   console.log(token);
   try {

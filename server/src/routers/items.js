@@ -53,7 +53,6 @@ router.delete("/item/:id", auth, async (req, res) => {
 
 router.post("/start_auction", auth, async (req, res) => {
   try {
-    const itemIds = Object.keys(req.body);
     res.json({ data: "wohi" });
   } catch (e) {}
 });
