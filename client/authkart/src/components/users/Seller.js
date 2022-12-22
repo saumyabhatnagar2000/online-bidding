@@ -61,7 +61,7 @@ const Seller = (props) =>{
         .then((resp)=>{
             setUser(resp.data)
             localStorage.setItem('user', resp.data)
-            navigate('/seller/details')
+            navigate('/home')
         })
         .catch((err)=>{
             alert(err)

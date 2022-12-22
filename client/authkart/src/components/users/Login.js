@@ -48,7 +48,7 @@ const Login = () =>{
                     <br/>
                     <div className="form-group">
                         <input
-                            type="text"
+                            type="password"
                             className="form-control form-control-lg"
                             placeholder="Enter your password"
                             name="password"
