@@ -91,6 +91,7 @@ const Bidding = () =>{
             <i class="fa fa-plus" aria-hidden="true" onClick={()=>{setMinBid(min_bid+bidData?.listing_id?.min_increment)}}></i>
             <br/>
             <br/>
+            {!biddingStart? <p>This bidding has ended or not started yet Please check after sometime</p> : null}
             <button className="btn btn-warning btn-block" onClick={createBid} disabled={biddingStart ? false: true}>Save</button>
         </div>
       </div>
