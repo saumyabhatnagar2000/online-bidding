@@ -68,8 +68,10 @@ const userSchema = new mongoose.Schema({
   company_id: {
     type: mongoose.Schema.Types.ObjectId,
 
-  }
-});
+  }},
+  { timestamps: true }
+);
+
 
 const companySchema = new mongoose.Schema({
   user_id : {
@@ -231,15 +233,10 @@ const listingSchema = new mongoose.Schema({
   },
   listing_type: {
     type: String,
-    required: true,
   },
   min_bid: {
     type: Number,
     required: true,
-  },
-  max_bid: {
-    type: Number,
-    required: false,
   },
   min_increment: {
     type: Number,
@@ -247,9 +244,10 @@ const listingSchema = new mongoose.Schema({
   },
   active:{
     type: Boolean,
-    default: true
-  }
-});
+    default: true,
+  }},
+  { timestamps: true }
+);
 
 const biddingSchema = new mongoose.Schema(
   {

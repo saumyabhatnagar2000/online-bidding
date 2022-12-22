@@ -1,9 +1,7 @@
 const express = require("express");
 const { json } = require("express/lib/response");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models/userModel");
-const { Company } = require("../models/userModel");
-const { Bidder } = require("../models/userModel");
+const { User, Item , Bidding , Company, Bidder} = require("../models/userModel");
 const router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -182,5 +180,14 @@ router.get("/bidder", auth, async (req, res) => {
 
 })
 
+router.get("/history", auth, async (req, res) => {
+  try {
+    items_bought = await Item.find({sold_to:req.user._id}).sort({updatedAt:-1});
+    bid_history = await Bidding.find({user_id:req.user._id}).sort({active:1,createdAt:-1});
+    res.send({items_bought:items_bought,bid_history:bid_history});
+  } catch (e) {
+    res.status(500).send(e);
+  }
+})
 
 module.exports = router;
