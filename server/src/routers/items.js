@@ -97,11 +97,11 @@ router.post("/bulk-upload", csv_upload.single("file"), auth , (req, res) => {
     }
     for(let i=1;i<records.length;i++){
       let data = {}
-      for(let j=0;j<4;j++){
+      for(let j=0;j<5;j++){
         data[records[0][j]] = records[i][j]
       }
       let specifications = {}
-      for(let j=4;j<records[0].length;j++){
+      for(let j=5;j<records[0].length;j++){
         if (records[i][j]){
           specifications[records[0][j]] = records[i][j];
         }

@@ -191,6 +191,9 @@ const itemSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    item_address: {
+      type: String,
+    },
     status: {
       type: String,
       default: "upcoming",
