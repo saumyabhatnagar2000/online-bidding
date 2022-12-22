@@ -1,4 +1,4 @@
-var axios = require('axios');
+const axios = require('axios');
 const express = require("express");
 const { Listing, Item } = require("../models/userModel");
 
@@ -7,7 +7,7 @@ const router = express.Router();
 
 
 router.post("/send/mail", (req, res) => {
-    var data = JSON.stringify({
+    const data = JSON.stringify({
         "from_data": {
           "name": "AuctKart Support",
           "email": "notification@auctkart.com"
@@ -23,7 +23,7 @@ router.post("/send/mail", (req, res) => {
         "module": "auction"
       });
       
-      var config = {
+      const config = {
         method: 'post',
         url: 'https://api.staging.credgenics.com/communication/public/mail',
         headers: { 
