@@ -2,6 +2,8 @@ const express = require("express");
 const { json } = require("express/lib/response");
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/userModel");
+const { Company } = require("../models/userModel");
+const { Bidder } = require("../models/userModel");
 const router = express.Router();
 const auth = require("../middleware/auth");
 
@@ -127,5 +129,58 @@ router.post("/user/logout-all", auth, async (req, res) => {
     res.status(500).send();
   }
 });
+
+router.post("/company", auth, async (req, res) => {
+  try {
+    req.body.user_id = req.user._id
+    const company = new Company(req.body);
+    await company.save();
+    res.send(company)
+    
+  } catch (e) {
+    res.status(400).send(e);
+  }
+
+})
+
+router.post("/bidder", auth, async (req, res) => {
+  try {
+    req.body.user_id = req.user._id
+    const bidder = new Bidder(req.body);
+    await bidder.save();
+    res.send(bidder)
+    
+  } catch (e) {
+    res.status(400).send(e);
+  }
+
+})
+
+router.get("/company", auth, async (req, res) => {
+  try {
+    const data = await Company.findOne({
+      user_id:req.user._id
+    });
+    if (data) return res.send(data);
+    res.status(404).send("not found");
+  } catch (e) {
+    res.status(500).send(e);
+  }
+
+})
+
+router.get("/bidder", auth, async (req, res) => {
+  try {
+    const data = await Bidder.findOne({
+      user_id:req.user._id
+    });
+    if (data) return res.send(data);
+    res.status(404).send("not found");
+  } catch (e) {
+    res.status(500).send(e);
+  }
+
+})
+
 
 module.exports = router;
