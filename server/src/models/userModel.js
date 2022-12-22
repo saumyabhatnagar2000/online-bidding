@@ -4,7 +4,6 @@ const {
   itemSchema,
   biddingSchema,
   ListingSchema,
-  itemSchema,
 } = require("../schemas/schema");
 
 const User = mongoose.model("User", userSchema);

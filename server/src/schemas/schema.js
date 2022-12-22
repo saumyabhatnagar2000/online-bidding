@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     unique: true,
     validate(value) {
-      if (validator.isEmail()) {
+      if (!validator.isEmail(value)) {
         throw new Error("Invalid Email");
       }
     },
@@ -225,4 +225,7 @@ userSchema.pre("save", async function (next) {
 module.exports = {
   userSchema,
   taskSchema,
+  itemSchema,
+  biddingSchema,
+  ListingSchema,
 };
