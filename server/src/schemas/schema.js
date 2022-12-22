@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const validator = require("validator");
+const { Timestamp } = require("mongodb");
 
 // const Task = require("../models/taskModel");
 const userSchema = new mongoose.Schema({
@@ -9,19 +11,50 @@ const userSchema = new mongoose.Schema({
     required: true,
     lowercase: true,
     unique: true,
-  },
-  number: {
-    type: String,
     validate(value) {
-      if (value.length != 10) throw new Error("Number is not valid");
+      if (validator.isEmail()) {
+        throw new Error("Invalid Email");
+      }
     },
   },
+  role: {
+    type: String,
+    required: true,
+    immutable: true,
+  },
+  active: {
+    type: Boolean,
+  },
+  current_bids: [
+    {
+      current_bid: {
+        type: mongoose.Schema.Types.ObjectId,
+        trim: true,
+        ref: "",
+      },
+    },
+  ],
+  intrested_categories: {
+    type: String,
+    trim: true,
+  },
+
+  // number: {
+  //   type: String,
+  //   validate(value) {
+  //     if (value.length != 10) throw new Error("Number is not valid");
+  //   },
+  // },
   password: {
     type: String,
     required: true,
     minLength: 7,
     trim: true,
     validate(value) {},
+  },
+  wallet: {
+    type: Number,
+    required: true,
   },
   tokens: [
     {
@@ -49,6 +82,106 @@ const taskSchema = new mongoose.Schema({
     ref: "User",
   },
 });
+
+const itemSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    seller_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
+    sub_category: {
+      type: String,
+      required: true,
+    },
+    images: [
+      {
+        image: {
+          type: Buffer,
+        },
+      },
+    ],
+    description: {
+      type: String,
+    },
+    status: {
+      type: String,
+      // convert to enum
+    },
+    specifications: {
+      type: Object,
+    },
+    listing_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Listing",
+    },
+    sold_to: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    sold_at: {
+      type: Date,
+    },
+  },
+  { timestamps: true }
+);
+
+const ListingSchema = new mongoose.Schema({
+  itemId: {
+    type: mongoose.Schema.Types.ObjectId,
+  },
+  end_date: {
+    type: Date,
+    required: true,
+  },
+  start_date: {
+    type: Date,
+    required: true,
+  },
+  listing_type: {
+    type: String,
+    required: true,
+  },
+  min_bid: {
+    type: Number,
+    required: true,
+  },
+  max_bid: {
+    type: Number,
+    required: false,
+  },
+  min_increment: {
+    type: Number,
+    required: true,
+  },
+});
+
+const biddingSchema = new mongoose.Schema(
+  {
+    listing_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Listing",
+    },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+    bid_amount: {
+      type: Number,
+      required: true,
+    },
+    active: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
 userSchema.virtual("tasks", {
   ref: "Task",
