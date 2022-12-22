@@ -1,9 +1,13 @@
 const express = require("express");
 const multer = require("multer");
 const auth = require("../middleware/auth");
-const { Item } = require("../models/userModel");
+const { Item, Listing } = require("../models/userModel");
 const cloudinary = require("cloudinary").v2;
 const streamfiber = require("streamifier");
+const parse = require('csv-parse').parse
+const fs = require('fs')
+const os = require('os')
+const csv_upload = multer({ dest: os.tmpdir() })
 
 cloudinary.config({
   secure: true,
@@ -44,7 +48,7 @@ router.post("/item", upload.array("photos", 15), auth, async (req, res) => {
 
 router.delete("/item/:id", auth, async (req, res) => {
   try {
-    const item = Item.findByIdAndRemove({ id: req.params.id });
+    const item = await Item.findByIdAndRemove({ id: req.params.id });
     res.send(item);
   } catch (e) {
     res.status(400).send(e);
@@ -53,8 +57,19 @@ router.delete("/item/:id", auth, async (req, res) => {
 
 router.post("/start_auction", auth, async (req, res) => {
   try {
-    res.json({ data: "wohi" });
-  } catch (e) {}
+    const data = req.body;
+    const newList = new Listing({ ...data, active: true });
+    await newList.save();
+    const updated = await Item.findByIdAndUpdate(req.body.item_id, {
+      listing_id: newList._id,
+      status: "ongoing",
+    });
+    console.log(updated);
+
+    res.json({ data: newList });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 const streamUpload = async (req) => {
@@ -70,5 +85,41 @@ const streamUpload = async (req) => {
     streamfiber.createReadStream(req.buffer).pipe(stream);
   });
 };
+
+router.post("/bulk-upload", csv_upload.single("file"), auth , (req, res) => {
+  const file = req.file
+
+  const data = fs.readFileSync(file.path)
+  parse(data, (err, records) => {
+    if (err) {
+      console.error(err)
+      return res.status(400).json({success: false, message: 'An error occurred'})
+    }
+    for(let i=1;i<records.length;i++){
+      let data = {}
+      for(let j=0;j<4;j++){
+        data[records[0][j]] = records[i][j]
+      }
+      let specifications = {}
+      for(let j=4;j<records[0].length;j++){
+        if (records[i][j]){
+          specifications[records[0][j]] = records[i][j];
+        }
+      }
+      console.log(specifications)
+      data["specifications"] = specifications
+      data["seller_id"] = req.user._id
+      console.log(data, "item data")
+      const item = new Item(data);
+      item.save();
+  }
+
+    return res.json({data: records})
+  })
+
+})
+
+
+
 
 module.exports = router;

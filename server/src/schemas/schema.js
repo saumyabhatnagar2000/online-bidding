@@ -5,126 +5,124 @@ const validator = require("validator");
 const { Timestamp } = require("mongodb");
 
 // const Task = require("../models/taskModel");
-const userSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    lowercase: true,
-    unique: true,
-    validate(value) {
-      if (!validator.isEmail(value)) {
-        throw new Error("Invalid Email");
-      }
-    },
-  },
-  role: {
-    type: String,
-    required: true,
-    immutable: true,
-  },
-  active: {
-    type: Boolean,
-    default: true
-  },
-  current_bids: [
-    {
-      current_bid: {
-        type: mongoose.Schema.Types.ObjectId,
-        trim: true,
-        ref: "",
+const userSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      lowercase: true,
+      unique: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid Email");
+        }
       },
     },
-  ],
-  
-
-  // number: {
-  //   type: String,
-  //   validate(value) {
-  //     if (value.length != 10) throw new Error("Number is not valid");
-  //   },
-  // },
-
-  password: {
-    type: String,
-    required: true,
-    minLength: 7,
-    trim: true,
-    validate(value) {},
-  },
-  wallet: {
-    type: Number,
-    required: true,
-    default: 0.0,
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        required: true,
-        trim: true,
-      },
+    role: {
+      type: String,
+      required: true,
+      immutable: true,
     },
-  ],
-  company_id: {
-    type: mongoose.Schema.Types.ObjectId,
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    current_bids: [
+      {
+        current_bid: {
+          type: mongoose.Schema.Types.ObjectId,
+          trim: true,
+          ref: "",
+        },
+      },
+    ],
 
-  }},
+    // number: {
+    //   type: String,
+    //   validate(value) {
+    //     if (value.length != 10) throw new Error("Number is not valid");
+    //   },
+    // },
+
+    password: {
+      type: String,
+      required: true,
+      minLength: 7,
+      trim: true,
+      validate(value) {},
+    },
+    wallet: {
+      type: Number,
+      required: true,
+      default: 0.0,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+          trim: true,
+        },
+      },
+    ],
+    company_id: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+  },
   { timestamps: true }
 );
 
-
 const companySchema = new mongoose.Schema({
-  user_id : {
-    type:mongoose.Schema.Types.ObjectId,
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   company_name: {
     type: String,
     required: true,
-    },
-    company_trademark:{
-      type:  String,
-      required: true,
-      trim: true,
-      unique: true
-    },
-    company_website:{
-      type: String
-    },
-    company_email:{
-      type: String,
-    },
-    company_type:{
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    authorised_representative_name:{
-      type: String,
-    },
-    authorised_representative_email:{
-      type:String
-    },
-    authorised_representative_contact_number:{
-      type: String
-    },
-    gst_number:
-    {
-      type:String,
-      required:true,
-    }
-    })
-  
+  },
+  company_trademark: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+  },
+  company_website: {
+    type: String,
+  },
+  company_email: {
+    type: String,
+  },
+  company_type: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  authorised_representative_name: {
+    type: String,
+  },
+  authorised_representative_email: {
+    type: String,
+  },
+  authorised_representative_contact_number: {
+    type: String,
+  },
+  gst_number: {
+    type: String,
+    required: true,
+  },
+});
+
 const bidderSchema = new mongoose.Schema({
-  user_id : {
-    type:mongoose.Schema.Types.ObjectId,
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   contact_number: {
-    type: String
+    type: String,
   },
   pan_card_number: {
     type: String,
@@ -135,21 +133,18 @@ const bidderSchema = new mongoose.Schema({
   aadhar_card_number: {
     type: String,
   },
-  aadhar_card_link : {
+  aadhar_card_link: {
     type: String,
   },
-  address:{
+  address: {
     type: String,
   },
   interested_categories: {
     type: String,
-    lowercase:true,
+    lowercase: true,
     trim: true,
   },
-
-}
-)
-  
+});
 
 const taskSchema = new mongoose.Schema({
   name: {
@@ -198,7 +193,7 @@ const itemSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "upcoming"
+      default: "upcoming",
     },
     specifications: {
       type: Object,
@@ -214,38 +209,39 @@ const itemSchema = new mongoose.Schema(
     sold_at: {
       type: Number,
     },
-
   },
   { timestamps: true }
 );
 
-const listingSchema = new mongoose.Schema({
-  itemId: {
-    type: mongoose.Schema.Types.ObjectId,
+const listingSchema = new mongoose.Schema(
+  {
+    itemId: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+    end_date: {
+      type: Date,
+      required: true,
+    },
+    start_date: {
+      type: Date,
+      required: true,
+    },
+    listing_type: {
+      type: String,
+    },
+    min_bid: {
+      type: Number,
+      required: true,
+    },
+    min_increment: {
+      type: Number,
+      required: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
-  end_date: {
-    type: Date,
-    required: true,
-  },
-  start_date: {
-    type: Date,
-    required: true,
-  },
-  listing_type: {
-    type: String,
-  },
-  min_bid: {
-    type: Number,
-    required: true,
-  },
-  min_increment: {
-    type: Number,
-    required: true,
-  },
-  active:{
-    type: Boolean,
-    default: true,
-  }},
   { timestamps: true }
 );
 
@@ -307,8 +303,6 @@ userSchema.pre("save", async function (next) {
 //   next();
 // });
 
-
-
 module.exports = {
   userSchema,
   taskSchema,
@@ -316,5 +310,5 @@ module.exports = {
   biddingSchema,
   listingSchema,
   companySchema,
-  bidderSchema
+  bidderSchema,
 };

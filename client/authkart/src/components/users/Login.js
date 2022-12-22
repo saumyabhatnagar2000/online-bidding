@@ -18,15 +18,18 @@ const Login = () => {
     setUser({ ...user, [e.target.name]: e.target.value });
   };
 
-
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
       const apiResponse = await loginUser(user.email, user.password);
-      console.log(apiResponse?.data?.token);
+      console.log(apiResponse?.data);
       setToken(apiResponse?.data?.token ?? "");
-      navigate("/items");
+      const role = apiResponse?.data?.user?.role;
       await localStorage.setItem("token", apiResponse?.data?.token);
+      await localStorage.setItem("role", role);
+      console.log(role);
+      if (role === "admin" || role === "seller") navigate("/items");
+      else navigate("/auction");
     } catch (e) {
       console.log(e);
     }
