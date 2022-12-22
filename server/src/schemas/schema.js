@@ -24,6 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
+    default: true
   },
   current_bids: [
     {
@@ -55,6 +56,7 @@ const userSchema = new mongoose.Schema({
   wallet: {
     type: Number,
     required: true,
+    default: 0.0,
   },
   tokens: [
     {

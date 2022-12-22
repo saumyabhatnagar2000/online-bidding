@@ -5,6 +5,8 @@ const { User } = require("../models/userModel");
 const router = express.Router();
 const auth = require("../middleware/auth");
 
+
+
 router.get("/users", auth, async (req, res) => {
   try {
     const data = await User.find({});
@@ -13,6 +15,8 @@ router.get("/users", auth, async (req, res) => {
     res.status(500).send(e);
   }
 });
+
+
 
 router.get("/user/:id", auth, async (req, res) => {
   try {
@@ -24,7 +28,22 @@ router.get("/user/:id", auth, async (req, res) => {
   }
 });
 
-router.patch("/users/:id", auth, async (req, res) => {
+
+router.patch("/profile/update", auth, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).send("not found");
+
+    Object.keys(req.body).forEach((item) => (user[item] = req.body[item]));
+    await user.save();
+    res.send(user);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+
+
+router.patch("/user/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).send("not found");
@@ -37,16 +56,26 @@ router.patch("/users/:id", auth, async (req, res) => {
   }
 });
 
-router.delete("/users/me", auth, async (req, res) => {
-  try {
-    await req.user.remove();
-    res.send(req.user);
-  } catch (e) {
-    res.status(500).send(e);
-  }
+
+
+router.delete("/profile/delete", auth, async (req, res) => {
+  //
+  //close running bids
+  
+
+
+  // try {
+
+  //   await req.user.remove();
+  //   res.send(req.user);
+  // } catch (e) {
+  //   res.status(500).send(e);
+  // }
 });
 
-router.post("/users/login", async (req, res) => {
+
+
+router.post("/user/login", async (req, res) => {
   try {
     const user = await User.findUserByCredentials(
       req.body.email,
@@ -59,7 +88,9 @@ router.post("/users/login", async (req, res) => {
   }
 });
 
-router.post("/users", async (req, res) => {
+
+
+router.post("/user/register", async (req, res) => {
   try {
     const user = new User(req.body);
     const token = await user.generateAuthToken();
@@ -70,11 +101,16 @@ router.post("/users", async (req, res) => {
   }
 });
 
-router.get("/users/me", auth, (req, res) => {
+
+
+
+router.get("/profile/me", auth, (req, res) => {
   res.send(req.user);
 });
 
-router.post("/users/logout", auth, async (req, res) => {
+
+
+router.post("/user/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter(({ token }) => token != req.token);
     await req.user.save();
@@ -84,7 +120,7 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
-router.post("/users/logoutAll", auth, async (req, res) => {
+router.post("/user/logout-all", auth, async (req, res) => {
   try {
     req.user.tokens = [];
     await req.user.save();
