@@ -105,7 +105,7 @@ const itemSchema = new mongoose.Schema(
     images: [
       {
         image: {
-          type: Buffer,
+          type: String,
         },
       },
     ],
