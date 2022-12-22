@@ -22,9 +22,13 @@ const Login = () => {
     e.preventDefault();
     try {
       const apiResponse = await loginUser(user.email, user.password);
+      console.log(apiResponse?.data?.token);
       setToken(apiResponse?.data?.token ?? "");
-      navigate("/home");
-    } catch (e) {}
+      navigate("/items");
+      await localStorage.setItem("token", apiResponse?.data?.token);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

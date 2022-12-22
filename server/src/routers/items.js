@@ -14,12 +14,12 @@ cloudinary.config({
 
 const router = express.Router();
 const upload = multer();
-
-router.get("/items", async (req, res) => {
+router.get("/items", auth, async (req, res) => {
   try {
-    const data = await Item.find({});
+    const data = await Item.find({ seller_id: req.user._id });
     res.send(data);
   } catch (e) {
+    console.log(e);
     res.status(500).send(e);
   }
 });
@@ -49,6 +49,13 @@ router.delete("/item/:id", auth, async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
+});
+
+router.post("/start_auction", auth, async (req, res) => {
+  try {
+    const itemIds = Object.keys(req.body);
+    res.json({ data: "wohi" });
+  } catch (e) {}
 });
 
 const streamUpload = async (req) => {
