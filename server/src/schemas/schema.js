@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: true
+    default: true,
   },
   current_bids: [
     {
@@ -35,7 +35,6 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-  
 
   // number: {
   //   type: String,
@@ -67,62 +66,60 @@ const userSchema = new mongoose.Schema({
   ],
   company_id: {
     type: mongoose.Schema.Types.ObjectId,
-
-  }
+  },
 });
 
 const companySchema = new mongoose.Schema({
-  user_id : {
-    type:mongoose.Schema.Types.ObjectId,
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   company_name: {
     type: String,
     required: true,
-    },
-    company_trademark:{
-      type:  String,
-      required: true,
-      trim: true,
-      unique: true
-    },
-    company_website:{
-      type: String
-    },
-    company_email:{
-      type: String,
-    },
-    company_type:{
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    authorised_representative_name:{
-      type: String,
-    },
-    authorised_representative_email:{
-      type:String
-    },
-    authorised_representative_contact_number:{
-      type: String
-    },
-    gst_number:
-    {
-      type:String,
-      required:true,
-    }
-    })
-  
+  },
+  company_trademark: {
+    type: String,
+    required: true,
+    trim: true,
+    unique: true,
+  },
+  company_website: {
+    type: String,
+  },
+  company_email: {
+    type: String,
+  },
+  company_type: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  authorised_representative_name: {
+    type: String,
+  },
+  authorised_representative_email: {
+    type: String,
+  },
+  authorised_representative_contact_number: {
+    type: String,
+  },
+  gst_number: {
+    type: String,
+    required: true,
+  },
+});
+
 const bidderSchema = new mongoose.Schema({
-  user_id : {
-    type:mongoose.Schema.Types.ObjectId,
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   contact_number: {
-    type: String
+    type: String,
   },
   pan_card_number: {
     type: String,
@@ -133,21 +130,18 @@ const bidderSchema = new mongoose.Schema({
   aadhar_card_number: {
     type: String,
   },
-  aadhar_card_link : {
+  aadhar_card_link: {
     type: String,
   },
-  address:{
+  address: {
     type: String,
   },
   interested_categories: {
     type: String,
-    lowercase:true,
+    lowercase: true,
     trim: true,
   },
-
-}
-)
-  
+});
 
 const taskSchema = new mongoose.Schema({
   name: {
@@ -196,7 +190,7 @@ const itemSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "upcoming"
+      default: "upcoming",
     },
     specifications: {
       type: Object,
@@ -228,10 +222,6 @@ const listingSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  listing_type: {
-    type: String,
-    required: true,
-  },
   min_bid: {
     type: Number,
     required: true,
@@ -244,10 +234,10 @@ const listingSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  active:{
+  active: {
     type: Boolean,
-    default: true
-  }
+    default: true,
+  },
 });
 
 const biddingSchema = new mongoose.Schema(
@@ -308,8 +298,6 @@ userSchema.pre("save", async function (next) {
 //   next();
 // });
 
-
-
 module.exports = {
   userSchema,
   taskSchema,
@@ -317,5 +305,5 @@ module.exports = {
   biddingSchema,
   listingSchema,
   companySchema,
-  bidderSchema
+  bidderSchema,
 };

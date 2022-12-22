@@ -71,10 +71,22 @@ const Items = () => {
   const [minInc, setMinInc] = useState(0);
   const [minBid, setMinBid] = useState(0);
   const [deadline, setDeadline] = useState(new Date());
+  const [startTime, setStartTime] = useState(new Date());
 
   const submitAuctionData = async () => {
     try {
-      const apiResponse = await startAuctionApi();
+      const token = await localStorage.getItem("token");
+      const data = {
+        item_id: Object.keys(selected)[0],
+        min_increment: minInc,
+        min_bid: minBid,
+        end_date: new Date(deadline),
+        start_date: new Date(startTime),
+      };
+      console.log(data);
+      const apiResponse = await startAuctionApi(data, token);
+      setShow(false);
+      setSelected({});
     } catch (e) {}
   };
 
@@ -93,12 +105,11 @@ const Items = () => {
             },
             "& .MuiPaper-root": {
               minWidth: "800px",
-              minHeight: "400px",
+              minHeight: "500px",
             },
           }}
         >
           <Box>
-            {/* <div className="row"> */}
             <Typography
               align="center"
               className="col"
@@ -109,7 +120,6 @@ const Items = () => {
             >
               Enter details for {selectedData.name}
             </Typography>
-            {/* </div> */}
 
             <Typography
               align="center"
@@ -123,7 +133,7 @@ const Items = () => {
             <FormControl>
               <TextField
                 value={minBid}
-                onChange={(value) => setMinBid(value)}
+                onChange={(e) => setMinBid(e.target.value)}
                 style={{ marginLeft: 270, marginTop: 10 }}
                 label="Enter Minimum bid"
                 variant="standard"
@@ -133,7 +143,7 @@ const Items = () => {
               <TextField
                 style={{ marginLeft: 270, marginTop: 10 }}
                 value={minInc}
-                onChange={(value) => setMinInc(value)}
+                onChange={(e) => setMinInc(e.target.value)}
                 label="Minimum Increment"
                 variant="standard"
                 color="primary"
@@ -157,9 +167,43 @@ const Items = () => {
                       <DateTimePicker
                         label="Start date"
                         inputFormat="yyyy-MM-dd"
+                        value={startTime}
+                        //   maxDate={endDate || moment(new Date())}
+                        inputFormat="E MMM dd yyyy HH:MM:SS O"
+                        onChange={(value) => {
+                          setStartTime(value);
+                        }}
+                        renderInput={(params) => (
+                          <TextField size="small" {...params} />
+                        )}
+                      />
+                    </Box>
+                  </Box>
+                </LocalizationProvider>
+              </DialogContent>
+              <DialogContent>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <Box
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      marginLeft: 270,
+                      marginTop: "10px",
+                    }}
+                  >
+                    <Box
+                      className="w-40"
+                      style={{ display: "flex", flexDirection: "column" }}
+                    >
+                      <DateTimePicker
+                        label="End date"
+                        inputFormat="yyyy-MM-dd"
                         value={deadline}
                         //   maxDate={endDate || moment(new Date())}
-                        onChange={(value) => setDeadline(value)}
+                        inputFormat="E MMM dd yyyy HH:MM:SS O"
+                        onChange={(value) => {
+                          setDeadline(value);
+                        }}
                         renderInput={(params) => (
                           <TextField size="small" {...params} />
                         )}
@@ -221,14 +265,18 @@ const Items = () => {
               return (
                 <tr>
                   <th>
-                    <input
-                      class="form-check-input"
-                      type="checkbox"
-                      value=""
-                      id="flexCheckChecked"
-                      checked={selected[item._id]}
-                      onChange={() => setSelectItem(item)}
-                    ></input>
+                    {item.status == "upcoming" ? (
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        value=""
+                        id="flexCheckChecked"
+                        checked={selected[item._id]}
+                        onChange={() => setSelectItem(item)}
+                      ></input>
+                    ) : (
+                      <></>
+                    )}
                   </th>
                   <th scope="row">{index + 1}</th>
                   <td style={{ textTransform: "capitalize" }}>{item.name}</td>
@@ -244,7 +292,7 @@ const Items = () => {
                   <td>{item.seller_id}</td>
                   <td>{item?.status ?? ""}</td>
                   <td>{item?.sold_to ?? "N/A"}</td>
-                  <td>{item?.status ?? "N/A"}</td>
+                  <td>{item?.sold_at ?? "N/A"}</td>
                 </tr>
               );
             })}

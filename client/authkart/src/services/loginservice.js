@@ -18,3 +18,18 @@ export const loginUser = async (email, password) => {
     throw new Error(e);
   }
 };
+
+export const signOut = async (token) => {
+  try {
+    const response = await hackathon({
+      url: "/user/logout",
+      method: "POST",
+      headers: {
+        Authorization: token,
+      },
+    });
+    return response;
+  } catch (e) {
+    throw new Error(e);
+  }
+};

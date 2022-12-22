@@ -1,7 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const auth = require("../middleware/auth");
-const { Item } = require("../models/userModel");
+const { Item, Listing } = require("../models/userModel");
 const cloudinary = require("cloudinary").v2;
 const streamfiber = require("streamifier");
 
@@ -44,7 +44,7 @@ router.post("/item", upload.array("photos", 15), auth, async (req, res) => {
 
 router.delete("/item/:id", auth, async (req, res) => {
   try {
-    const item = Item.findByIdAndRemove({ id: req.params.id });
+    const item = await Item.findByIdAndRemove({ id: req.params.id });
     res.send(item);
   } catch (e) {
     res.status(400).send(e);
@@ -53,8 +53,19 @@ router.delete("/item/:id", auth, async (req, res) => {
 
 router.post("/start_auction", auth, async (req, res) => {
   try {
-    res.json({ data: "wohi" });
-  } catch (e) {}
+    const data = req.body;
+    const newList = new Listing({ ...data, active: true });
+    await newList.save();
+    const updated = await Item.findByIdAndUpdate(req.body.item_id, {
+      listing_id: newList._id,
+      status: "ongoing",
+    });
+    console.log(updated);
+
+    res.json({ data: newList });
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 const streamUpload = async (req) => {
