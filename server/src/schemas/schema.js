@@ -35,10 +35,7 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
-  intrested_categories: {
-    type: String,
-    trim: true,
-  },
+  
 
   // number: {
   //   type: String,
@@ -46,6 +43,7 @@ const userSchema = new mongoose.Schema({
   //     if (value.length != 10) throw new Error("Number is not valid");
   //   },
   // },
+
   password: {
     type: String,
     required: true,
@@ -67,7 +65,89 @@ const userSchema = new mongoose.Schema({
       },
     },
   ],
+  company_id: {
+    type: mongoose.Schema.Types.ObjectId,
+
+  }
 });
+
+const companySchema = new mongoose.Schema({
+  user_id : {
+    type:mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
+  company_name: {
+    type: String,
+    required: true,
+    },
+    company_trademark:{
+      type:  String,
+      required: true,
+      trim: true,
+      unique: true
+    },
+    company_website:{
+      type: String
+    },
+    company_email:{
+      type: String,
+    },
+    company_type:{
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+    authorised_representative_name:{
+      type: String,
+    },
+    authorised_representative_email:{
+      type:String
+    },
+    authorised_representative_contact_number:{
+      type: String
+    },
+    gst_number:
+    {
+      type:String,
+      required:true,
+    }
+    })
+  
+const bidderSchema = new mongoose.Schema({
+  user_id : {
+    type:mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
+  contact_number: {
+    type: String
+  },
+  pan_card_number: {
+    type: String,
+  },
+  pan_card_link: {
+    type: String,
+  },
+  aadhar_card_number: {
+    type: String,
+  },
+  aadhar_card_link : {
+    type: String,
+  },
+  address:{
+    type: String,
+  },
+  interested_categories: {
+    type: String,
+    lowercase:true,
+    trim: true,
+  },
+
+}
+)
+  
 
 const taskSchema = new mongoose.Schema({
   name: {
@@ -136,7 +216,7 @@ const itemSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const ListingSchema = new mongoose.Schema({
+const listingSchema = new mongoose.Schema({
   itemId: {
     type: mongoose.Schema.Types.ObjectId,
   },
@@ -224,10 +304,14 @@ userSchema.pre("save", async function (next) {
 //   next();
 // });
 
+
+
 module.exports = {
   userSchema,
   taskSchema,
   itemSchema,
   biddingSchema,
-  ListingSchema,
+  listingSchema,
+  companySchema,
+  bidderSchema
 };

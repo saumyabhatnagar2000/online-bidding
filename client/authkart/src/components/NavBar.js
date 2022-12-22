@@ -32,7 +32,7 @@ const NavBar = () => {
           {!user ? <Link className='btn btn-outline-light w-25' to="/login" >Sign In</Link>: null}
           {!user ? <Link className='btn btn-outline-light w-25' to="/register" >Create Account</Link>: null}
           {user ? <Link className='btn btn-outline-light w-25' to="/login" onClick={handleSignOut}>Sign Out</Link>: null}
-          {user ? <Link className='btn btn-outline-light w-25' to="/user/add">Add Users</Link>:null}
+          {user ? <Link className='btn btn-outline-light w-25' to="/additem">Add Item</Link>:null}
         </div>
       </nav>
   );
