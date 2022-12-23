@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 class AddItem extends Component{
     constructor() {
         super();
@@ -8,6 +9,7 @@ class AddItem extends Component{
         };
         this.updateData = this.updateData.bind(this);
     }
+    
 
     handleChange = event => {
         this.setState({
@@ -41,10 +43,9 @@ class AddItem extends Component{
                 } else {
                     console.log(res)
                 }
-
             }
-
         })
+        window.locate.replace('/items')
     };
 
     updateData(result) {

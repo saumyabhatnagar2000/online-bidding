@@ -18,7 +18,6 @@ const Auction = () =>{
             console.log(err)
         })
     }
-    console.log(data)
 
     return(
         <div>
