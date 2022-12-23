@@ -13,6 +13,8 @@ import Login from "./components/users/Login";
 import NavBar from "./components/NavBar";
 import Seller from "./components/users/Seller";
 import Items from "./components/users/Items";
+import Auction from "./components/Auctions";
+import Bidding from "./components/BidPage";
 
 function App() {
   return (
@@ -38,6 +40,8 @@ function App() {
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/seller/details" element={<Seller />} />
             <Route exact path="/items" element={<Items />} />
+            <Route exact path="/auctions" element={<Auction />} />
+            <Route exact path="/auctions/:id" element={<Bidding />} />
           </Routes>
         </Router>
       </div>

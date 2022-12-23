@@ -15,19 +15,21 @@ const Seller = (props) =>{
     const [companyDetail, setCompanyDetails] = useState({
         companyname:"",
         trademark:"",
-        website:""
+        website:"",
+        gstnumber:""
 
     })
 
     const [userDetails, setUserDetails] = useState({
         file:"",
         username:"",
-        number:""
+        number:"",
+        pancardnum:""
     })
 
     const {ifscCode, accountNumber, name} = bankDetail
-    const {companyname, trademark, website} = companyDetail
-    const {username, file, number} = userDetails
+    const {companyname, trademark, website, gstnumber} = companyDetail
+    const {username, file, number, pancardnum} = userDetails
 
     const onInputChange = (e) =>{
         setBankDetails({...bankDetail, [e.target.name]:e.target.value})
@@ -52,7 +54,9 @@ const Seller = (props) =>{
             website:companyDetail.website,
             file:userDetails.file,
             username: userDetails.username,
-            number:userDetails.number
+            number:userDetails.number,
+            gstnumber:companyDetail.gstnumber,
+            pancardnum: userDetails.pancardnum
         }
         e.preventDefault();
 
@@ -157,6 +161,18 @@ const Seller = (props) =>{
                                 />
                             </div>
                             <br/>
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    className="form-control form-control-lg"
+                                    placeholder="GST Number"
+                                    required="true"
+                                    name="gstnumber"
+                                    value={gstnumber}
+                                    onChange={e=>onDetailsChange(e)}
+                                />
+                            </div>
+                            <br/>
                             <button className="btn btn-warning btn-block" onClick={onSubmit}>Register</button>
                         </form>
                     </div>
@@ -206,10 +222,16 @@ const Seller = (props) =>{
                                 />
                             </div>
                             <br/>
-                            <div class="mb-3">
-                            <label for="formFileMultiple" className="form-label">Multiple files input example</label>
-                            <input className="form-control" type="file" id="file" multiple>
-                            </input>
+                            <div className="form-group">
+                                <input
+                                    type="text"
+                                    className="form-control form-control-lg"
+                                    placeholder="Pan Card"
+                                    required="true"
+                                    name="pancardnum"
+                                    value={pancardnum}
+                                    onChange={e=>onUserDetailsChange(e)}
+                                />
                             </div>
                             <br/>
                             <button className="btn btn-warning btn-block" onClick={onSubmit}>Register</button>

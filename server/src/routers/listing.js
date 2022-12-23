@@ -15,7 +15,8 @@ router.post("/create/listing", auth, async (req, res) => {
                 listing_type,
                 min_bid,
                 max_bid,
-                min_increment
+                min_increment,
+                itemId:Object(itemId)
             })
             data.save()
             const id = data._id
@@ -26,14 +27,40 @@ router.post("/create/listing", auth, async (req, res) => {
                 }
             })
         }
-        res.send("updated successfully");
+        return res.send();
       }
-      res.send("Error updating all the records")
+      return res.send("Error updating all the records")
     } catch (e) {
       console.log(e);
       res.status(500).send(e);
     }
   });
+
+router.get('/listings', auth, async(req, res) =>{
+    try{
+        const lisings = await Listing.find({})
+        if(lisings){
+            return res.send(lisings)
+        }
+        return res.send("No data found")
+    }catch(err){
+        console.log(err)
+        res.status(500).send(err)
+    }
+})
+
+router.get('/listing/:id', auth, async(req, res) =>{
+    try{
+        const lising = await Listing.findById(req.params.id)
+        if(lising){
+            return res.send(lising)
+        }
+        return res.send("No data found")
+    }catch(err){
+        console.log(err)
+        res.status(500).send(err)
+    }
+})
 
 
 module.exports = router;
