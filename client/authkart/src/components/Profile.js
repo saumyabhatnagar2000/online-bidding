@@ -67,8 +67,8 @@ export const Profile = () => {
 
   return (
     <>
-      <div className="container">
-        <div className="card">
+      <div className="container" style={{ marginTop: 20, marginBottom: 20 }}>
+        <div className="card" style={{ padding: 20 }}>
           <h3>Email: {userProfile?.email}</h3>
           <p style={{ textTransform: "capitalize" }}>
             Role: {userProfile?.role}
@@ -78,49 +78,52 @@ export const Profile = () => {
           </p>
         </div>
       </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Category</th>
-            <th scope="col">Sold At</th>
-            <th scope="col">Status</th>
-            <th scope="col">Address</th>
-            <th scope="col">Verify</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userHistory?.map((item, index) => {
-            return (
-              <tr>
-                <th scope="row">{index + 1}</th>
-                <td style={{ textTransform: "capitalize" }}>{item.name}</td>
-                <td style={{ textTransform: "capitalize" }}>
-                  {item.sub_category}
-                </td>
-                <td>₹{item.sold_at}</td>
-                <td>{item.status}</td>
-                <td>{item.item_address}</td>
+      <div className="container">
+        <h3 style={{ color: "green" }}>Items Won</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Name</th>
+              <th scope="col">Category</th>
+              <th scope="col">Sold At</th>
+              <th scope="col">Status</th>
+              <th scope="col">Address</th>
+              <th scope="col">Verify</th>
+            </tr>
+          </thead>
+          <tbody>
+            {userHistory?.map((item, index) => {
+              return (
+                <tr>
+                  <th scope="row">{index + 1}</th>
+                  <td style={{ textTransform: "capitalize" }}>{item.name}</td>
+                  <td style={{ textTransform: "capitalize" }}>
+                    {item.sub_category}
+                  </td>
+                  <td>₹{item.sold_at}</td>
+                  <td>{item.status}</td>
+                  <td>{item.item_address}</td>
 
-                <td>
-                  {item.verified == "not_verified" ? (
-                    <button
-                      type="button"
-                      onClick={() => sendForVerification(item)}
-                      class="btn btn-success"
-                    >
-                      Verify
-                    </button>
-                  ) : (
-                    item.verified
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  <td>
+                    {item.verified == "not_verified" ? (
+                      <button
+                        type="button"
+                        onClick={() => sendForVerification(item)}
+                        class="btn btn-success"
+                      >
+                        Verify
+                      </button>
+                    ) : (
+                      item.verified
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

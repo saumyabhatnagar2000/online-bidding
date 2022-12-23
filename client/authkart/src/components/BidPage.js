@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
+import { useInterval } from "../hooks/useInterval";
 
 const Bidding = () => {
   const { id } = useParams();
@@ -16,6 +16,10 @@ const Bidding = () => {
     getAuctionData();
     getBiddingData();
   }, []);
+
+  useInterval(async () => {
+    getBiddingData();
+  }, 3000);
 
   const decrementBid = () => {
     let decrement = min_bid - bidData?.listing_id?.min_increment;
@@ -65,10 +69,6 @@ const Bidding = () => {
         console.log(err);
       });
   };
-
-  //   setInterval(() => {
-  //     getBiddingData();
-  //   }, 20000);
 
   const verifyBid = () => {
     const stDate = moment.utc(bidData?.listing_id?.start_date);
@@ -156,7 +156,7 @@ const Bidding = () => {
               <tr>
                 <th scope="row">{index + 1}</th>
                 <td style={{}}>{item.user_id.email}</td>
-                <td>{item.bid_amount}</td>
+                <td>₹{item.bid_amount}</td>
               </tr>
             );
           })}

@@ -21,8 +21,16 @@ router.get("/auctions", async (req, res) => {
 });
 
 router.get("/auctions/:id", async (req, res) => {
+  const listing_id = req.params.id;
+  console.log(listing_id, "listing id");
+
   try {
-    var listings = await Item.findById(req.params.id).populate("listing_id");
+    var listing = await Listing.findOne({ _id: listing_id });
+    if (!listing) {
+      res.status(400).send("Invalid listing ID");
+    }
+    let item_id = listing.get("itemId") || ""
+    var listings = await Item.findById(item_id).populate("listing_id");
     if (listings) {
       console.log(listings);
       return res.send(listings);
@@ -52,9 +60,10 @@ router.post("/create/bidding", async (req, res) => {
 
 router.get("/bidding/:id", async (req, res) => {
   console.log(req.params.id, "listing_id");
-  let listing_id = req.params.id
+  let listing_id = req.params.id;
   try {
-    const data = await Bidding.find({ listing_id: listing_id}).sort({createdAt: -1})
+    const data = await Bidding.find({ listing_id: listing_id })
+      .sort({ createdAt: -1 })
       .populate("user_id")
       .populate({
         model: "Listing",
