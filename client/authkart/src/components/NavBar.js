@@ -25,9 +25,11 @@ const NavBar = () => {
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container-fluid">
-        <a className="navbar-brand" href="/">
+        {role=='Buyer'? <a className="navbar-brand" href="/auctions">
           AuctKart
-        </a>
+        </a>: <a className="navbar-brand" href="/items">
+          AuctKart
+        </a>}
         <button
           className="navbar-toggler"
           type="button"
@@ -42,16 +44,16 @@ const NavBar = () => {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           {user ? (
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/home">
-                  Home
+              {role=='Buyer'? <li className="nav-item">
+                <NavLink className="nav-link" to="/auctions">
+                  Auctions
                 </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/about">
-                  About
+              </li>: null}
+              {role=='Seller' ? <li className="nav-item">
+                <NavLink className="nav-link" to="/items">
+                  ItemList
                 </NavLink>
-              </li>
+              </li>: null}
               <li className="nav-item">
                 <NavLink className="nav-link" to="/profile">
                   Profile

@@ -29,7 +29,7 @@ const Login = () => {
       await localStorage.setItem("role", role);
       console.log(role);
       if (role === "admin" || role === "seller") navigate("/items");
-      else navigate("/auction");
+      else navigate("/auctions");
     } catch (e) {
       console.log(e);
     }
