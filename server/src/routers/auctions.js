@@ -51,9 +51,10 @@ router.post("/create/bidding", async (req, res) => {
 });
 
 router.get("/bidding/:id", async (req, res) => {
-  console.log(req.query.id);
+  console.log(req.params.id, "listing_id");
+  let listing_id = req.params.id
   try {
-    const data = await Bidding.find({})
+    const data = await Bidding.find({ listing_id: listing_id}).sort({createdAt: -1})
       .populate("user_id")
       .populate({
         model: "Listing",
