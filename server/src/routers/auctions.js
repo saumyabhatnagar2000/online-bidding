@@ -21,9 +21,16 @@ router.get("/auctions", async (req, res) => {
 });
 
 router.get("/auctions/:id", async (req, res) => {
+  const listing_id = req.params.id;
+  console.log(listing_id, "listing id");
+
   try {
-    const listing = await Listing.findById(req.params.id);
-    var listings = await Item.findById(listing._id).populate("listing_id");
+    var listing = await Listing.findOne({ _id: listing_id });
+    let item_id = listing.get("itemId") || "";
+    if (!item_id) {
+      res.status(400).send("Invalid listing ID");
+    }
+    var listings = await Item.findById(item_id).populate("listing_id");
     if (listings) {
       console.log(listings);
       return res.send(listings);
