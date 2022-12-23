@@ -15,7 +15,8 @@ router.post("/create/listing", auth, async (req, res) => {
                 listing_type,
                 min_bid,
                 max_bid,
-                min_increment
+                min_increment,
+                itemId:Object(itemId)
             })
             data.save()
             const id = data._id

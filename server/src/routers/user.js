@@ -91,11 +91,29 @@ router.post("/user/login", async (req, res) => {
 
 
 router.post("/user/register", async (req, res) => {
-  console.log(req.body.user)
+  console.log(req.body)
   const { user } = req.body;
+  const {ifscCode, accountNumber, name, companyname, trademark, website, file, username, number,pancardnum, gstnumber} = req.body
   const users = new User(user);
   const token = await users.generateAuthToken();
   await users.save();
+  if(companyname){
+    await Company.create({
+      user_id:Object(users._id),
+      company_name: companyname,
+      company_trademark: trademark,
+      company_website: website,
+      gst_number: gstnumber,
+      pan_card_number:pancardnum
+    })
+  }
+  else if(username){
+    await Bidder.create({
+      user_id:Object(user._id),
+      contact_number: number,
+      pan_card_number: pancardnum
+    })
+  }
   res.send({ users, token });
 });
 

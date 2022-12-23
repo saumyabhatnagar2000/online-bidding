@@ -41,9 +41,9 @@ const Bidding = () =>{
     const getAuctionData = () =>{
         axios.get(`http://localhost:3001/auctions/${id}`)
         .then((resp)=>{
-            console.log(resp.data)
+            setBidData(resp.data)
             setMinBid(resp.data?.listing_id?.min_bid)
-            // verifyBid()
+            verifyBid()
         }).catch((err)=>{
             console.log(err)
         })
