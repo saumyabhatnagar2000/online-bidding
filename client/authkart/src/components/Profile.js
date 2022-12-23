@@ -1,3 +1,4 @@
+import win from "global";
 import React, { useEffect, useState } from "react";
 import hackathon from "../services/hackathon";
 
@@ -50,6 +51,7 @@ export const Profile = () => {
           Authorization: token,
         },
       });
+      window.location.reload();
       console.log(apiResponse?.data);
     } catch (e) {
       console.log(e);
@@ -102,7 +104,7 @@ export const Profile = () => {
                 <td>{item.item_address}</td>
 
                 <td>
-                  {!item.verified ? (
+                  {item.verified == "not_verified" ? (
                     <button
                       type="button"
                       onClick={() => sendForVerification(item)}
@@ -111,7 +113,7 @@ export const Profile = () => {
                       Verify
                     </button>
                   ) : (
-                    "Verified"
+                    item.verified
                   )}
                 </td>
               </tr>

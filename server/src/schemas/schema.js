@@ -214,8 +214,8 @@ const itemSchema = new mongoose.Schema(
       type: Number,
     },
     verified: {
-      type: Boolean,
-      default: false,
+      type: String,
+      default: "not_verified",
     },
   },
   { timestamps: true }

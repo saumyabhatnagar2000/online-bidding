@@ -65,6 +65,10 @@ const Bidding = () => {
       });
   };
 
+  //   setInterval(() => {
+  //     getBiddingData();
+  //   }, 20000);
+
   const verifyBid = () => {
     const stDate = moment.utc(bidData?.listing_id?.start_date);
     const enDate = moment.utc(bidData?.listing_id?.end_date);
@@ -98,7 +102,7 @@ const Bidding = () => {
         </div>
       </div>
       <hr />
-      <div className="container">
+      <div className="container" style={{ marginBottom: 20 }}>
         Category: {bidData?.category}
         <br />
         Sub Category: {bidData?.sub_category}
@@ -108,7 +112,12 @@ const Bidding = () => {
         Status: {bidData?.status}
         <br />
         <i class="fa fa-minus" aria-hidden="true" onClick={decrementBid}></i>
-        <button className="btn btn-warning btn-block">{min_bid}</button>
+        <button
+          style={{ paddingLeft: 20, paddingRight: 20, margin: 20 }}
+          className="btn btn-primary btn-block"
+        >
+          {min_bid}
+        </button>
         <i
           class="fa fa-plus"
           aria-hidden="true"
@@ -125,11 +134,12 @@ const Bidding = () => {
           </p>
         ) : null}
         <button
-          className="btn btn-warning btn-block"
+          className="btn btn-success btn-block"
           onClick={createBid}
+          style={{ paddingLeft: 20, paddingRight: 20 }}
           disabled={biddingStart ? false : true}
         >
-          Save
+          Place Bid
         </button>
       </div>
       <table class="table">
@@ -138,9 +148,6 @@ const Bidding = () => {
             <th scope="col">#</th>
             <th scope="col">Email</th>
             <th scope="col">Bidding Amount</th>
-            <th scope="col">Status</th>
-            <th scope="col">Sold To</th>
-            <th scope="col">Sold At</th>
           </tr>
         </thead>
         <tbody>
@@ -150,9 +157,6 @@ const Bidding = () => {
                 <th scope="row">{index + 1}</th>
                 <td style={{}}>{item.user_id.email}</td>
                 <td>{item.bid_amount}</td>
-                <td>{item?.status ?? ""}</td>
-                <td>{item?.sold_to ?? "N/A"}</td>
-                <td>{item?.sold_at ?? "N/A"}</td>
               </tr>
             );
           })}

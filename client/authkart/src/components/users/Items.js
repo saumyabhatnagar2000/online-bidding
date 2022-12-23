@@ -31,7 +31,6 @@ const getItemData = (id, data) => {
 };
 
 const Items = () => {
-  const navigate = useNavigation;
   const { token } = useData();
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState({});
@@ -85,12 +84,14 @@ const Items = () => {
         end_date: new Date(deadline),
         start_date: new Date(startTime),
       };
+      window.location.href = "http://192.168.5.15:3006/auctions";
+      setSelected({});
+      setShow(false);
       console.log(data);
       const apiResponse = await startAuctionApi(data, token);
-      setShow(false);
-      setSelected({});
-      navigate("/auctions");
-    } catch (e) {}
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (

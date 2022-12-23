@@ -56,6 +56,15 @@ router.get("/items_to_verify", auth, async (req, res) => {
 router.post("/add_to_verify", auth, async (req, res) => {
   try {
     const data = { ...req.body, requested_by: req.user._id, active: true };
+    const item = await Item.updateOne(
+      { _id: req.user.item_id },
+      {
+        $set: {
+          verified: "pending",
+        },
+      }
+    );
+    console.log(item);
     const response = new ItemVerification(data);
     await response.save();
     res.send(response);
@@ -185,6 +194,7 @@ router.post("/bulk-upload", csv_upload.single("file"), auth, (req, res) => {
       console.log(specifications);
       data["specifications"] = specifications;
       data["seller_id"] = req.user._id;
+      data["verified_id"] = "not_verified";
       console.log(data, "item data");
       const item = new Item(data);
       item.save();
