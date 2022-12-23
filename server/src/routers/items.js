@@ -160,7 +160,7 @@ const streamUpload = async (req) => {
 
 router.post("/bulk-upload", csv_upload.single("file"), auth, (req, res) => {
   const file = req.file;
-
+  console.log(file)
   const data = fs.readFileSync(file.path);
   parse(data, (err, records) => {
     if (err) {
