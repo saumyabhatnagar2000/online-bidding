@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import { useInterval } from "../hooks/useInterval";
 
 const Bidding = () => {
   const { id } = useParams();
@@ -15,6 +16,10 @@ const Bidding = () => {
     getAuctionData();
     getBiddingData();
   }, []);
+
+  useInterval(async () => {
+    getBiddingData();
+  }, 3000);
 
   const decrementBid = () => {
     let decrement = min_bid - bidData?.listing_id?.min_increment;
@@ -124,9 +129,9 @@ const Bidding = () => {
         {biddingStart ? (
           <h4 style={{ color: "blue" }}>
             Current Bid: ₹
-            {min_bid > allBiddings[0].bid_amount
+            {min_bid > allBiddings[0]?.bid_amount
               ? min_bid
-              : allBiddings[0].bid_amount}
+              : allBiddings?.[0]?.bid_amount}
           </h4>
         ) : (
           <></>
