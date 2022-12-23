@@ -74,7 +74,9 @@ const NavBar = () => {
           <Link className="btn btn-outline-light  w-21" to="/additem">
             Add Item
           </Link>
-        ) : null}
+        ) : <Link className="btn btn-outline-light  w-21" to="/additem">
+        Add Item
+      </Link>}
         {token ? (
           <Link
             className="btn btn-outline-light ms-1 w-21"
