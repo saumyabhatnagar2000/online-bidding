@@ -65,10 +65,6 @@ const Bidding = () => {
       });
   };
 
-  //   setInterval(() => {
-  //     getBiddingData();
-  //   }, 20000);
-
   const verifyBid = () => {
     const stDate = moment.utc(bidData?.listing_id?.start_date);
     const enDate = moment.utc(bidData?.listing_id?.end_date);
