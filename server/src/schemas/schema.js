@@ -212,6 +212,10 @@ const itemSchema = new mongoose.Schema(
     sold_at: {
       type: Number,
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
@@ -267,6 +271,30 @@ const biddingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const itemVerificationSchema = new mongoose.Schema({
+  item_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Item",
+  },
+  requested_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
+  verified_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  remark: {
+    type: String,
+  },
+  active: {
+    type: Boolean,
+    default: true,
+  },
+});
+
 userSchema.virtual("tasks", {
   ref: "Task",
   localField: "_id",
@@ -314,4 +342,5 @@ module.exports = {
   listingSchema,
   companySchema,
   bidderSchema,
+  itemVerificationSchema,
 };
