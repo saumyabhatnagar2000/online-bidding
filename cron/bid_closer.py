@@ -50,8 +50,6 @@ def run_forever():
 
 def process_listing(listing):
     listing["active"] = False
-    import pdb;
-    pdb.set_trace()
     listing_id = listing.get("_id")
     item_id = listing.get("itemId")
     item = items.find_one({"_id":item_id})
