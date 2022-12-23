@@ -5,7 +5,8 @@ const {
   biddingSchema,
   listingSchema,
   companySchema,
-  bidderSchema
+  bidderSchema,
+  itemVerificationSchema,
 } = require("../schemas/schema");
 
 const User = mongoose.model("User", userSchema);
@@ -14,5 +15,17 @@ const Listing = mongoose.model("Listing", listingSchema);
 const Bidding = mongoose.model("Bidding", biddingSchema);
 const Bidder = mongoose.model("Bidder", bidderSchema);
 const Company = mongoose.model("Company", companySchema);
+const ItemVerification = mongoose.model(
+  "ItemVerification",
+  itemVerificationSchema
+);
 
-module.exports = { User, Item, Listing, Bidding, Bidder, Company };
+module.exports = {
+  User,
+  Item,
+  Listing,
+  Bidding,
+  Bidder,
+  Company,
+  ItemVerification,
+};

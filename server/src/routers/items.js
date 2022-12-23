@@ -1,7 +1,12 @@
 const express = require("express");
 const multer = require("multer");
 const auth = require("../middleware/auth");
-const { Item, Listing } = require("../models/userModel");
+const {
+  Item,
+  Listing,
+  ItemVerification,
+  User,
+} = require("../models/userModel");
 const cloudinary = require("cloudinary").v2;
 const streamfiber = require("streamifier");
 
@@ -24,6 +29,35 @@ router.get("/items", auth, async (req, res) => {
   }
 });
 
+router.get("/items_to_verify", auth, async (req, res) => {
+  try {
+    const data = await ItemVerification.find({ active: true }).populate({
+      path: "item_id",
+      model: "Item",
+      populate: {
+        path: "seller_id",
+        model: "User",
+      },
+    });
+
+    res.send(data);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(e);
+  }
+});
+
+router.post("/add_to_verify", auth, async (req, res) => {
+  try {
+    const data = { ...req.body, requested_by: req.user._id, active: true };
+    const response = new ItemVerification(data);
+    await response.save();
+    res.send(response);
+  } catch (e) {
+    res.status(500).send(e);
+  }
+});
+
 router.post("/item", upload.array("photos", 15), auth, async (req, res) => {
   try {
     const imageArray = [];
@@ -38,6 +72,38 @@ router.post("/item", upload.array("photos", 15), auth, async (req, res) => {
     item.save();
     res.send(item);
   } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+router.patch("/item/:id", auth, async (req, res) => {
+  try {
+    const id = req.params.id;
+    console.log(req.body, id);
+    const item = await Item.updateOne(
+      { _id: id },
+      {
+        $set: {
+          verified: req.body.verified,
+          remarks: req.body.remarks,
+        },
+      }
+    );
+    const updateStatus = await ItemVerification.updateOne(
+      {
+        _id: req.body.verification_id,
+      },
+      {
+        $set: {
+          active: false,
+        },
+      }
+    );
+    console.log(updateStatus);
+    if (!item) return res.json({ data: "no data to update" });
+    res.send(item);
+  } catch (e) {
+    console.log(e);
     res.status(400).send(e);
   }
 });
