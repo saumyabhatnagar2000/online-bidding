@@ -16,6 +16,7 @@ import { getItems, startAuctionApi } from "../../services/itemsService";
 // import DatePicker from "react-datepicker";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { useNavigation } from "react-router-dom";
 
 // import "react-datepicker/dist/react-datepicker.css";
 
@@ -30,6 +31,7 @@ const getItemData = (id, data) => {
 };
 
 const Items = () => {
+  const navigate = useNavigation;
   const { token } = useData();
   const [data, setData] = useState([]);
   const [selected, setSelected] = useState({});
@@ -87,6 +89,7 @@ const Items = () => {
       const apiResponse = await startAuctionApi(data, token);
       setShow(false);
       setSelected({});
+      navigate("/auctions");
     } catch (e) {}
   };
 
@@ -119,15 +122,6 @@ const Items = () => {
               style={{ margin: 10 }}
             >
               Enter details for {selectedData.name}
-            </Typography>
-
-            <Typography
-              align="center"
-              style={{ margin: 10 }}
-              id="modal-modal-description"
-              sx={{ mt: 2 }}
-            >
-              {formIndex} out of {Object.keys(selected).length}
             </Typography>
 
             <FormControl>

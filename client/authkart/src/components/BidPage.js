@@ -1,101 +1,165 @@
 import React, { useState, useEffect } from "react";
-import {useNavigate, Link, useParams} from "react-router-dom";
-import axios from 'axios';
-import moment from 'moment';
+import { useNavigate, Link, useParams } from "react-router-dom";
+import axios from "axios";
+import moment from "moment";
 
-const Bidding = () =>{
-    const { id } = useParams()
-    const [bidData, setBidData] = useState()
-    const [min_bid, setMinBid] = useState()
-    const { token } = localStorage;
-    const [biddingStart, setBiddingStart] = useState(true)
+const Bidding = () => {
+  const { id } = useParams();
+  const [bidData, setBidData] = useState();
+  const [min_bid, setMinBid] = useState();
+  const { token } = localStorage;
+  const [biddingStart, setBiddingStart] = useState(true);
+  const [allBiddings, setAllBiddings] = useState([]);
 
-    useEffect(()=>{
-        getAuctionData()
-    },[])
+  useEffect(() => {
+    getAuctionData();
+    getBiddingData();
+  }, []);
 
-    const decrementBid = () =>{
-        let decrement = min_bid - bidData?.listing_id?.min_increment
-        if(decrement < bidData?.listing_id?.min_bid){
-            return alert('Bid amount cannot be less than current')
-        }
-        setMinBid(decrement)
-
+  const decrementBid = () => {
+    let decrement = min_bid - bidData?.listing_id?.min_increment;
+    if (decrement < bidData?.listing_id?.min_bid) {
+      return alert("Bid amount cannot be less than current");
     }
+    setMinBid(decrement);
+  };
 
-    const createBid = () =>{
-        let body = {
-            listing_id: bidData?.listing_id?._id,
-            user_id: bidData?.seller_id,
-            bid_amount: min_bid,
-            active: true
-        }
-        axios.post(`http://localhost:3001/create/bidding`, body)
-        .then((resp)=>{
-            console.log(resp.data)
-        }).catch((er)=>{
-            console.log(er)
-        })
+  const createBid = () => {
+    let body = {
+      listing_id: bidData?.listing_id?._id,
+      user_id: bidData?.seller_id,
+      bid_amount: min_bid,
+      active: true,
+    };
+    axios
+      .post(`http://localhost:3001/create/bidding`, body)
+      .then((resp) => {
+        console.log(resp.data);
+      })
+      .catch((er) => {
+        console.log(er);
+      });
+  };
+
+  const getAuctionData = () => {
+    axios
+      .get(`http://localhost:3001/auctions/${id}`)
+      .then((resp) => {
+        setBidData(resp.data);
+        setMinBid(resp.data?.listing_id?.min_bid);
+        verifyBid();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const getBiddingData = () => {
+    axios
+      .get(`http://localhost:3001/bidding/${id}`)
+      .then((resp) => {
+        console.log(resp?.data);
+        setAllBiddings(resp?.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const verifyBid = () => {
+    const stDate = moment.utc(bidData?.listing_id?.start_date);
+    const enDate = moment.utc(bidData?.listing_id?.end_date);
+    if (stDate > moment(new Date()) || enDate < moment(new Date())) {
+      setBiddingStart(false);
+    } else {
+      setBiddingStart(true);
     }
+  };
 
-    const getAuctionData = () =>{
-        axios.get(`http://localhost:3001/auctions/${id}`)
-        .then((resp)=>{
-            setBidData(resp.data)
-            setMinBid(resp.data?.listing_id?.min_bid)
-            verifyBid()
-        }).catch((err)=>{
-            console.log(err)
-        })
-    }
-
-    const verifyBid = () =>{
-        const stDate = moment.utc(bidData?.listing_id?.start_date)
-        const enDate = moment.utc(bidData?.listing_id?.end_date)
-        if(stDate > moment(new Date()) || enDate < moment(new Date())){
-            setBiddingStart(false)
-        }else{
-            setBiddingStart(true)
-        }
-    }
-
-    return (
-        <div>
-        
-         <div className="container">
-             <h1>Bidding Live</h1>
-            <div className="row">
-            {bidData?.images?.map((item)=>{
-            return <div class="col-4">
-            <img className="card-img-top" src={item?.image} alt="Card image cap" />
-            <div className="card-body">
-            <h5 className="card-title">{item.sub_category}</h5>
-            <p className="card-text">{item.description}</p>
-            </div>
-            </div>
-        })}
-            </div>
-            </div>
-        <hr/>
-        <div className="container">
-            Category: {bidData?.category}
-            <br/>
-            Sub Category: {bidData?.sub_category}
-            <br/>
-            Description: {bidData?.description}
-            <br/>
-            Status: {bidData?.status}
-            <br/>
-            <i class="fa fa-minus" aria-hidden="true" onClick={decrementBid}></i>
-            <button className="btn btn-warning btn-block">{min_bid}</button>
-            <i class="fa fa-plus" aria-hidden="true" onClick={()=>{setMinBid(min_bid+bidData?.listing_id?.min_increment)}}></i>
-            <br/>
-            <br/>
-            {!biddingStart? <p>This bidding has ended or not started yet Please check after sometime</p> : null}
-            <button className="btn btn-warning btn-block" onClick={createBid} disabled={biddingStart ? false: true}>Save</button>
+  return (
+    <div>
+      <div className="container">
+        <h1>Bidding Live</h1>
+        <div className="row">
+          {bidData?.images?.map((item) => {
+            return (
+              <div class="col-4">
+                <img
+                  className="card-img-top"
+                  src={item?.image}
+                  alt="Card image cap"
+                />
+                <div className="card-body">
+                  <h5 className="card-title">{item.sub_category}</h5>
+                  <p className="card-text">{item.description}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
-    )
-}
+      <hr />
+      <div className="container">
+        Category: {bidData?.category}
+        <br />
+        Sub Category: {bidData?.sub_category}
+        <br />
+        Description: {bidData?.description}
+        <br />
+        Status: {bidData?.status}
+        <br />
+        <i class="fa fa-minus" aria-hidden="true" onClick={decrementBid}></i>
+        <button className="btn btn-warning btn-block">{min_bid}</button>
+        <i
+          class="fa fa-plus"
+          aria-hidden="true"
+          onClick={() => {
+            setMinBid(min_bid + bidData?.listing_id?.min_increment);
+          }}
+        ></i>
+        <br />
+        <br />
+        {!biddingStart ? (
+          <p>
+            This bidding has ended or not started yet Please check after
+            sometime
+          </p>
+        ) : null}
+        <button
+          className="btn btn-warning btn-block"
+          onClick={createBid}
+          disabled={biddingStart ? false : true}
+        >
+          Save
+        </button>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Bidding Amount</th>
+            <th scope="col">Status</th>
+            <th scope="col">Sold To</th>
+            <th scope="col">Sold At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {allBiddings?.map((item, index) => {
+            return (
+              <tr>
+                <th scope="row">{index + 1}</th>
+                <td style={{}}>{item.user_id.email}</td>
+                <td>{item.bid_amount}</td>
+                <td>{item?.status ?? ""}</td>
+                <td>{item?.sold_to ?? "N/A"}</td>
+                <td>{item?.sold_at ?? "N/A"}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+};
 
 export default Bidding;

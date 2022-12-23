@@ -1,11 +1,9 @@
 const express = require("express");
 const { json } = require("express/lib/response");
 const jwt = require("jsonwebtoken");
-const { User, Item , Bidding , Company, Bidder} = require("../models/userModel");
+const { User, Item, Bidding, Company, Bidder } = require("../models/userModel");
 const router = express.Router();
 const auth = require("../middleware/auth");
-
-
 
 router.get("/users", auth, async (req, res) => {
   try {
@@ -15,19 +13,6 @@ router.get("/users", auth, async (req, res) => {
     res.status(500).send(e);
   }
 });
-
-
-
-router.get("/user/:id", auth, async (req, res) => {
-  try {
-    const data = await User.findById(req.params.id);
-    if (data) return res.send(data);
-    res.status(404).send("not found");
-  } catch (e) {
-    res.status(500).send(e);
-  }
-});
-
 
 router.patch("/profile/update", auth, async (req, res) => {
   try {
@@ -42,7 +27,6 @@ router.patch("/profile/update", auth, async (req, res) => {
   }
 });
 
-
 router.patch("/user/:id", auth, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -56,24 +40,16 @@ router.patch("/user/:id", auth, async (req, res) => {
   }
 });
 
-
-
 router.delete("/profile/delete", auth, async (req, res) => {
   //
   //close running bids
-  
-
-
   // try {
-
   //   await req.user.remove();
   //   res.send(req.user);
   // } catch (e) {
   //   res.status(500).send(e);
   // }
 });
-
-
 
 router.post("/user/login", async (req, res) => {
   try {
@@ -88,43 +64,47 @@ router.post("/user/login", async (req, res) => {
   }
 });
 
-
-
 router.post("/user/register", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   const { user } = req.body;
-  const {ifscCode, accountNumber, name, companyname, trademark, website, file, username, number,pancardnum, gstnumber} = req.body
+  const {
+    ifscCode,
+    accountNumber,
+    name,
+    companyname,
+    trademark,
+    website,
+    file,
+    username,
+    number,
+    pancardnum,
+    gstnumber,
+  } = req.body;
   const users = new User(user);
   const token = await users.generateAuthToken();
   await users.save();
-  if(companyname){
+  if (companyname) {
     await Company.create({
-      user_id:Object(users._id),
+      user_id: Object(users._id),
       company_name: companyname,
       company_trademark: trademark,
       company_website: website,
       gst_number: gstnumber,
-      pan_card_number:pancardnum
-    })
-  }
-  else if(username){
+      pan_card_number: pancardnum,
+    });
+  } else if (username) {
     await Bidder.create({
-      user_id:Object(user._id),
+      user_id: Object(user._id),
       contact_number: number,
-      pan_card_number: pancardnum
-    })
+      pan_card_number: pancardnum,
+    });
   }
   res.send({ users, token });
 });
 
-
-
-
 router.get("/profile/me", auth, (req, res) => {
   res.send(req.user);
 });
-
-
 
 router.post("/user/logout", auth, async (req, res) => {
   try {
@@ -148,64 +128,63 @@ router.post("/user/logout-all", auth, async (req, res) => {
 
 router.post("/company", auth, async (req, res) => {
   try {
-    req.body.user_id = req.user._id
+    req.body.user_id = req.user._id;
     const company = new Company(req.body);
     await company.save();
-    res.send(company)
-    
+    res.send(company);
   } catch (e) {
     res.status(400).send(e);
   }
-
-})
+});
 
 router.post("/bidder", auth, async (req, res) => {
   try {
-    req.body.user_id = req.user._id
+    req.body.user_id = req.user._id;
     const bidder = new Bidder(req.body);
     await bidder.save();
-    res.send(bidder)
-    
+    res.send(bidder);
   } catch (e) {
     res.status(400).send(e);
   }
-
-})
+});
 
 router.get("/company", auth, async (req, res) => {
   try {
     const data = await Company.findOne({
-      user_id:req.user._id
+      user_id: req.user._id,
     });
     if (data) return res.send(data);
     res.status(404).send("not found");
   } catch (e) {
     res.status(500).send(e);
   }
-
-})
+});
 
 router.get("/bidder", auth, async (req, res) => {
   try {
     const data = await Bidder.findOne({
-      user_id:req.user._id
+      user_id: req.user._id,
     });
     if (data) return res.send(data);
     res.status(404).send("not found");
   } catch (e) {
     res.status(500).send(e);
   }
-
-})
+});
 
 router.get("/history", auth, async (req, res) => {
   try {
-    items_bought = await Item.find({sold_to:req.user._id}).sort({updatedAt:-1});
-    bid_history = await Bidding.find({user_id:req.user._id}).sort({active:1,createdAt:-1});
-    res.send({items_bought:items_bought,bid_history:bid_history});
+    items_bought = await Item.find({ sold_to: req.user._id }).sort({
+      updatedAt: -1,
+    });
+    bid_history = await Bidding.find({ user_id: req.user._id }).sort({
+      active: 1,
+      createdAt: -1,
+    });
+    res.send({ items_bought: items_bought, bid_history: bid_history });
   } catch (e) {
     res.status(500).send(e);
   }
-})
+});
 
 module.exports = router;

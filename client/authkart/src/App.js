@@ -16,6 +16,7 @@ import Items from "./components/users/Items";
 import Auction from "./components/Auctions";
 import Bidding from "./components/BidPage";
 import AddItem from "./components/AddItem";
+import { Profile } from "./components/Profile";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route exact path="/auctions" element={<Auction />} />
             <Route exact path="/auctions/:id" element={<Bidding />} />
             <Route exact path="/additem" element={<AddItem />} />
+            <Route exact path="/profile" element={<Profile />} />
           </Routes>
         </Router>
       </div>
