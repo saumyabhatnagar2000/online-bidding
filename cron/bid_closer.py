@@ -106,6 +106,7 @@ def send_win_mail(email,buyer_name,item_name,bid_amount):
     "email": email,
     "subject": subject
     })
+    print(f"subject {subject}, body {body}, email {email}, buyer_name {buyer_name}, item_name {item_name}, bid_amount {bid_amount}")
     response = requests.request("POST", mail_url, headers=headers, data=payload)
     print(response.text)
     return

@@ -1,5 +1,5 @@
 def winner_mail(buyer_name, item_name, bid_amount, app_link):
-    subject = f"AuctKart | Congratulations"
+    subject = "AuctKart | Congratulations"
     email_body = f"""\
     <p>Congratulations {buyer_name}</p>
     </br>
