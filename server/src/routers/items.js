@@ -25,7 +25,9 @@ const router = express.Router();
 const upload = multer();
 router.get("/items", auth, async (req, res) => {
   try {
-    const data = await Item.find({ seller_id: req.user._id });
+    const data = await Item.find({ seller_id: req.user._id }).populate(
+      "seller_id"
+    );
     res.send(data);
   } catch (e) {
     console.log(e);
@@ -160,7 +162,7 @@ const streamUpload = async (req) => {
 
 router.post("/bulk-upload", csv_upload.single("file"), auth, (req, res) => {
   const file = req.file;
-  console.log(file)
+  console.log(file);
   const data = fs.readFileSync(file.path);
   parse(data, (err, records) => {
     if (err) {

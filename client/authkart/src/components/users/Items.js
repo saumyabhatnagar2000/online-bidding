@@ -283,7 +283,7 @@ const Items = () => {
                       src={item?.images[0]?.image}
                     ></img>
                   </td>
-                  <td>{item.seller_id}</td>
+                  <td>{item.seller_id.email}</td>
                   <td>{item?.status ?? ""}</td>
                   <td>{item?.sold_to ?? "N/A"}</td>
                   <td>{item?.sold_at ?? "N/A"}</td>

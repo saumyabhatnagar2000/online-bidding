@@ -26,7 +26,7 @@ const NavBar = () => {
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">
-          Auction Kart
+          AuctKart
         </a>
         <button
           className="navbar-toggler"
