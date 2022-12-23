@@ -1,5 +1,7 @@
 from pymongo import MongoClient
 from templates import winner_mail
+from time import sleep
+from datetime import datetime, timezone
 import requests
 import json
 
@@ -20,8 +22,7 @@ def get_database():
    return client['test']
   
 # This is added so that many files can reuse the function get_database()
-from time import sleep
-from datetime import datetime
+
 
 db = get_database()
 users = db['users']
@@ -34,7 +35,7 @@ def run_forever():
     print(f"script started at {str(datetime.now())}")
     try:
         while True:
-            for listing in listings.find({"active": True, "end_date": {"$lt":datetime.now()}}).sort("end_date",-1):
+            for listing in listings.find({"active": True, "end_date": {"$lt":datetime.now(timezone.utc)}}).sort("end_date",-1):
                 print("listing found")
                 process_listing(listing)
             sleep(30)
@@ -90,7 +91,7 @@ def process_listing(listing):
     x = biddings.update_many({ "listing_id": listing_id }, { "$set": { "active": False } })
     print(f"{x} biddings processed\n")
     if sold_to:
-        collection = {"user_id":user_id, "collection_amount":sold_at, "item_id":item.get("_id"),"listing_id":listing.get("_id"),"createdAt": datetime.now()}
+        collection = {"user_id":user_id, "collection_amount":sold_at, "item_id":item.get("_id"),"listing_id":listing.get("_id"),"createdAt": datetime.now(timezone.utc)}
         collections_pool.insert_one(collection)
         print(f"{item.get('_id')} sold to {user_id} for {sold_at}\n")
         send_win_mail(user.get("email"), "test", item.get("name"), sold_at)

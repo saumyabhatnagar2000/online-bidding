@@ -1,87 +1,77 @@
+import React, { Component } from "react";
 import axios from 'axios';
-  
-import React,{Component} from 'react';
-  
-class AddItem extends Component {
-   
-    state = {
-      selectedFile: null
-    };
-     
-    onFileChange = event => {
-    
-      this.setState({ selectedFile: event.target.files[0] });
-     
-    };
-     
-    onFileUpload = () => {
-     
-      const formData = new FormData();
-    
-      formData.append(
-        "myFile",
-        this.state.selectedFile,
-        this.state.selectedFile.name
-      );
-     
-      // Details of the uploaded file
-      console.log(formData);
-     
-      // Request made to the backend api
-      // Send formData object
-      axios.post("api/uploadfile", formData);
-    };
-     
-    // File content to be displayed after
-    // file upload is complete
-    fileData = () => {
-     
-      if (this.state.selectedFile) {
-          
-        return (
-          <div>
-            <h2>File Details:</h2>
-            <p>File Name: {this.state.selectedFile.name}</p>
-  
-            <p>File Type: {this.state.selectedFile.type}</p>
-  
-            <p>
-              Last Modified:{" "}
-              {this.state.selectedFile.lastModifiedDate.toDateString()}
-            </p>
-  
-          </div>
-        );
-      } else {
-        return (
-          <div>
-            <br />
-            <h4>Choose before Pressing the Upload button</h4>
-          </div>
-        );
-      }
-    };
-     
-    render() {
-     
-      return (
-        <div>
-            <h1>
-              Add Item
-            </h1>
-            <h3>
-              File Upload using React!
-            </h3>
-            <div>
-                <input type="file" onChange={this.onFileChange} />
-                <button onClick={this.onFileUpload}>
-                  Upload!
-                </button>
-            </div>
-          {this.fileData()}
-        </div>
-      );
+class AddItem extends Component{
+    constructor() {
+        super();
+        this.state = {
+            csvfile: undefined
+        };
+        this.updateData = this.updateData.bind(this);
     }
-  }
-  
-  export default AddItem;
+
+    handleChange = event => {
+        this.setState({
+            csvfile: event.target.files[0]
+        });
+    };
+
+    importCSV = async () => {
+        const { csvfile } = this.state;
+        console.log(csvfile);
+        var fileName = csvfile.name;
+        const formData = new FormData();
+        formData.append(
+            "file",
+            csvfile,
+        );
+        let token = await localStorage.getItem("token")
+        axios.post(`http://localhost:3001/bulk-upload`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+                'Authorization': token
+            }
+        }).then(res => { // then print response status
+            console.log(res)
+            if (res === 'success') {
+                alert("File data uploaded Successfully");
+            } else {
+                if (res === 'Error') {
+                    alert("Please ensure that your CSV file is formatted using the correct template, if you have any doubt contact the support team.");
+
+                } else {
+                    console.log(res)
+                }
+
+            }
+
+        })
+    };
+
+    updateData(result) {
+        var data = result.data;
+        console.log(data);
+    }
+
+    render() {
+        console.log(this.state.csvfile);
+        return (
+            <div className="App">
+                <h2>Import CSV File!</h2>
+                <input
+                    className="csv-input"
+                    type="file"
+                    ref={input => {
+                        this.filesInput = input;
+                    }}
+                    name="file"
+                    placeholder={null}
+                    onChange={this.handleChange}
+                />
+                <p />
+                <button onClick={this.importCSV}> Upload now!</button>
+            </div>
+        );
+    }
+}
+
+export default AddItem;
