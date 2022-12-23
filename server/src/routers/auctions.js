@@ -26,10 +26,10 @@ router.get("/auctions/:id", async (req, res) => {
 
   try {
     var listing = await Listing.findOne({ _id: listing_id });
-    let item_id = listing.get("itemId") || "";
     if (!item_id) {
       res.status(400).send("Invalid listing ID");
     }
+    let item_id = listing.get("itemId") || ""
     var listings = await Item.findById(item_id).populate("listing_id");
     if (listings) {
       console.log(listings);
