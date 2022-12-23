@@ -1,4 +1,16 @@
 from pymongo import MongoClient
+from templates import winner_mail
+import requests
+import json
+
+mail_url = "localhost:3001/send/mail"
+headers = {
+  'Content-Type': 'application/json'
+}
+app_link = "localhost:3001"
+
+
+
 def get_database():
    # Provide the mongodb atlas url to connect python to mongodb using pymongo
    CONNECTION_STRING = "mongodb+srv://cg-hackathon:saumya20000@cluster0.bpdxxbh.mongodb.net/?retryWrites=true&w=majority"
@@ -19,9 +31,11 @@ items = db["items"]
 collections_pool = db["collections"]
 
 def run_forever():
+    print(f"script started at {str(datetime.now())}")
     try:
         while True:
             for listing in listings.find({"active": True, "end_date": {"$lt":datetime.now()}}).sort("end_date",-1):
+                print("listing found")
                 process_listing(listing)
             sleep(30)
     except Exception:
@@ -35,9 +49,11 @@ def run_forever():
 #     pass
 
 def process_listing(listing):
-    #listing_type = listing.get("listing_type")
+    listing["active"] = False
+    import pdb;
+    pdb.set_trace()
     listing_id = listing.get("_id")
-    item_id = listing.get("item_id")
+    item_id = listing.get("itemId")
     item = items.find_one({"_id":item_id})
     sold_at = 0
     sold_to = None
@@ -52,40 +68,47 @@ def process_listing(listing):
         user = users.find_one({"_id":user_id})
         #give user money back in wallet
         user["wallet"] += bid_amount
-        users.replace_one(user)
+        users.replace_one({"_id":user_id}, user)
     
     #item is sold
     if sold_to:
-        user = users.find_one({"_id":user_id})
+        user = users.find_one({"_id":sold_to})
         user["wallet"] -= sold_at
-        users.replace_one(user)
-
-        #end listing
-        listing["active"] = False
-
-        #update item 
-        item["status"] = "sold"
-        item["sold_to"] = sold_to
-        item["sold_at"] = sold_at
+        users.replace_one({"_id":user_id}, user)
+        if item:
+            item["status"] = "sold"
+            item["sold_to"] = sold_to
+            item["sold_at"] = sold_at
 
         
     else:
-        item["status"] = "unsold"
+        if item:
+            item["status"] = "unsold"
 
-    listings.replace_one(listing)
-    items.replace_one(item)
 
+    listings.replace_one({"_id": listing_id}, listing)
+    if item:
+        items.replace_one({"_id": item_id}, item)
+    x = biddings.update_many({ "listing_id": listing_id }, { "$set": { "active": False } })
+    print(f"{x} biddings processed\n")
     collection = {"user_id":user_id, "collection_amount":sold_at, "item_id":item.get("_id"),"listing_id":listing.get("_id"),"createdAt": datetime.now()}
-    collections_pool.insert_one(collection)  
+    collections_pool.insert_one(collection)
+    print(f"{item.get('_id')} sold to {user_id} for {sold_at}\n")
+    send_win_mail(user.get("email"), "test", item.get("name"), sold_at)
     return 
         
-        
 
 
-
-
-
-
+def send_win_mail(email,buyer_name,item_name,bid_amount):
+    subject, body  = winner_mail(buyer_name,item_name,bid_amount,app_link)
+    payload = json.dumps({
+    "body": body,
+    "email": email,
+    "subject": subject
+    })
+    response = requests.request("POST", mail_url, headers=headers, data=payload)
+    print(response.text)
+    return
 
 
 
