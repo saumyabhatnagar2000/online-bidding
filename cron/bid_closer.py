@@ -89,10 +89,11 @@ def process_listing(listing):
         items.replace_one({"_id": item_id}, item)
     x = biddings.update_many({ "listing_id": listing_id }, { "$set": { "active": False } })
     print(f"{x} biddings processed\n")
-    collection = {"user_id":user_id, "collection_amount":sold_at, "item_id":item.get("_id"),"listing_id":listing.get("_id"),"createdAt": datetime.now()}
-    collections_pool.insert_one(collection)
-    print(f"{item.get('_id')} sold to {user_id} for {sold_at}\n")
-    send_win_mail(user.get("email"), "test", item.get("name"), sold_at)
+    if sold_to:
+        collection = {"user_id":user_id, "collection_amount":sold_at, "item_id":item.get("_id"),"listing_id":listing.get("_id"),"createdAt": datetime.now()}
+        collections_pool.insert_one(collection)
+        print(f"{item.get('_id')} sold to {user_id} for {sold_at}\n")
+        send_win_mail(user.get("email"), "test", item.get("name"), sold_at)
     return 
         
 
