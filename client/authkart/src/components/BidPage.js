@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
+import { MDBRow, MDBCol } from 'mdb-react-ui-kit';
 
 const Bidding = () => {
   const { id } = useParams();
@@ -82,36 +83,21 @@ const Bidding = () => {
   return (
     <div>
       <div className="container">
-        <h1>Bidding Live</h1>
+        <div className="container">
         <div className="row">
+          <div className="col-sm">
           {bidData?.images?.map((item) => {
             return (
-              <div class="col-4">
                 <img
                   className="card-img-top"
                   src={item?.image}
                   alt="Card image cap"
+                  style={{width:"400px", height: "300px"}}
                 />
-                <div className="card-body">
-                  <h5 className="card-title">{item.sub_category}</h5>
-                  <p className="card-text">{item.description}</p>
-                </div>
-              </div>
             );
           })}
-        </div>
-      </div>
-      <hr />
-      <div className="container" style={{ marginBottom: 20 }}>
-        Category: {bidData?.category}
-        <br />
-        Sub Category: {bidData?.sub_category}
-        <br />
-        Description: {bidData?.description}
-        <br />
-        Status: {bidData?.status}
-        <br />
-        <i class="fa fa-minus" aria-hidden="true" onClick={decrementBid}></i>
+          <br/>
+          <i class="fa fa-minus" aria-hidden="true" onClick={decrementBid}></i>
         <button
           style={{ paddingLeft: 20, paddingRight: 20, margin: 20 }}
           className="btn btn-primary btn-block"
@@ -125,14 +111,7 @@ const Bidding = () => {
             setMinBid(min_bid + bidData?.listing_id?.min_increment);
           }}
         ></i>
-        <br />
-        <br />
-        {!biddingStart ? (
-          <p>
-            This bidding has ended or not started yet Please check after
-            sometime
-          </p>
-        ) : null}
+        <br/>
         <button
           className="btn btn-success btn-block"
           onClick={createBid}
@@ -141,7 +120,28 @@ const Bidding = () => {
         >
           Place Bid
         </button>
+          </div>
+          <div className="col-sm">
+          {bidData?.images?.map((item)=>{
+                return (
+                <div className="card-body">
+                <h5 className="card-title">{item.sub_category}</h5>
+                <p className="card-text">{item.description}</p>
+              </div>
+                )
+            })}
+          </div>
+          <div className="col-sm">
+          <p><b>Category:</b> {bidData?.category}</p>
+        <p><b>Sub Category:</b> {bidData?.sub_category}</p>
+        <p><b>Description:</b> {bidData?.description}</p>
+        <p><b>Status:</b> {bidData?.status}</p>
+        <br/>
+          </div>
+        </div>
       </div>
+      </div>
+      <hr/>
       <table class="table">
         <thead>
           <tr>
