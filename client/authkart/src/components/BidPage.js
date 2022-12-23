@@ -90,7 +90,10 @@ const Bidding = () => {
               <div class="col-4">
                 <img
                   className="card-img-top"
-                  src={item?.image}
+                  src={
+                    item?.image ??
+                    "http://res.cloudinary.com/saumya1/image/upload/v1671779241/ekcqike1yqhdggynlfb8.jpg"
+                  }
                   alt="Card image cap"
                 />
                 <div className="card-body">
@@ -129,7 +132,7 @@ const Bidding = () => {
         {biddingStart ? (
           <h4 style={{ color: "blue" }}>
             Current Bid: ₹
-            {min_bid > allBiddings[0]?.bid_amount
+            {!allBiddings[0]?.bid_amount
               ? min_bid
               : allBiddings?.[0]?.bid_amount}
           </h4>

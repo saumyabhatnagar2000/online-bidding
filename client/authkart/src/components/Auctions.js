@@ -30,7 +30,10 @@ const Auction = () => {
               <div class="col-4">
                 <img
                   className="card-img-top"
-                  src={item?.images[0]?.image}
+                  src={
+                    item?.images[0]?.image ??
+                    "http://res.cloudinary.com/saumya1/image/upload/v1671779241/ekcqike1yqhdggynlfb8.jpg"
+                  }
                   alt="Card image cap"
                 />
                 <div className="card-body">

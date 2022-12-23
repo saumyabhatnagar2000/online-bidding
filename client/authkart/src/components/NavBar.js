@@ -62,11 +62,13 @@ const NavBar = () => {
                   </NavLink>
                 </li>
               ) : null}
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/profile">
-                  Profile
-                </NavLink>
-              </li>
+              {token ? (
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/profile">
+                    Profile
+                  </NavLink>
+                </li>
+              ) : null}
             </ul>
           ) : null}
         </div>

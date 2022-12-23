@@ -55,9 +55,9 @@ router.get("/items_to_verify", auth, async (req, res) => {
 
 router.post("/add_to_verify", auth, async (req, res) => {
   try {
-    const data = { ...req.body, requested_by: req.user._id, active: true };
+    const data = { ...req.body, requested_by: req.body.item_id, active: true };
     const item = await Item.updateOne(
-      { _id: req.user.item_id },
+      { _id: req.body.item_id },
       {
         $set: {
           verified: "pending",

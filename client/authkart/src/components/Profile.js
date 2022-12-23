@@ -89,7 +89,7 @@ export const Profile = () => {
               <th scope="col">Sold At</th>
               <th scope="col">Status</th>
               <th scope="col">Address</th>
-              <th scope="col">Verify</th>
+              <th scope="col">Verification</th>
             </tr>
           </thead>
           <tbody>
@@ -105,7 +105,7 @@ export const Profile = () => {
                   <td>{item.status}</td>
                   <td>{item.item_address}</td>
 
-                  <td>
+                  <td style={{ textTransform: "capitalize" }}>
                     {item.verified == "not_verified" ? (
                       <button
                         type="button"
