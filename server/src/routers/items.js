@@ -9,10 +9,10 @@ const {
 } = require("../models/userModel");
 const cloudinary = require("cloudinary").v2;
 const streamfiber = require("streamifier");
-const parse = require('csv-parse').parse
-const fs = require('fs')
-const os = require('os')
-const csv_upload = multer({ dest: os.tmpdir() })
+const parse = require("csv-parse").parse;
+const fs = require("fs");
+const os = require("os");
+const csv_upload = multer({ dest: os.tmpdir() });
 
 cloudinary.config({
   secure: true,
@@ -124,12 +124,18 @@ router.delete("/item/:id", auth, async (req, res) => {
 router.post("/start_auction", auth, async (req, res) => {
   try {
     const data = req.body;
+    console.log(data);
     const newList = new Listing({ ...data, active: true });
     await newList.save();
-    const updated = await Item.findByIdAndUpdate(req.body.item_id, {
-      listing_id: newList._id,
-      status: "ongoing",
-    });
+    await Item.updateOne(
+      { _id: req.body.itemId },
+      {
+        $set: {
+          listing_id: newList._id,
+          status: "ongoing",
+        },
+      }
+    );
     console.log(updated);
 
     res.json({ data: newList });
@@ -152,40 +158,38 @@ const streamUpload = async (req) => {
   });
 };
 
-router.post("/bulk-upload", csv_upload.single("file"), auth , (req, res) => {
-  const file = req.file
+router.post("/bulk-upload", csv_upload.single("file"), auth, (req, res) => {
+  const file = req.file;
 
-  const data = fs.readFileSync(file.path)
+  const data = fs.readFileSync(file.path);
   parse(data, (err, records) => {
     if (err) {
-      console.error(err)
-      return res.status(400).json({success: false, message: 'An error occurred'})
+      console.error(err);
+      return res
+        .status(400)
+        .json({ success: false, message: "An error occurred" });
     }
-    for(let i=1;i<records.length;i++){
-      let data = {}
-      for(let j=0;j<5;j++){
-        data[records[0][j]] = records[i][j]
+    for (let i = 1; i < records.length; i++) {
+      let data = {};
+      for (let j = 0; j < 5; j++) {
+        data[records[0][j]] = records[i][j];
       }
-      let specifications = {}
-      for(let j=5;j<records[0].length;j++){
-        if (records[i][j]){
+      let specifications = {};
+      for (let j = 5; j < records[0].length; j++) {
+        if (records[i][j]) {
           specifications[records[0][j]] = records[i][j];
         }
       }
-      console.log(specifications)
-      data["specifications"] = specifications
-      data["seller_id"] = req.user._id
-      console.log(data, "item data")
+      console.log(specifications);
+      data["specifications"] = specifications;
+      data["seller_id"] = req.user._id;
+      console.log(data, "item data");
       const item = new Item(data);
       item.save();
-  }
+    }
 
-    return res.json({data: records})
-  })
-
-})
-
-
-
+    return res.json({ data: records });
+  });
+});
 
 module.exports = router;

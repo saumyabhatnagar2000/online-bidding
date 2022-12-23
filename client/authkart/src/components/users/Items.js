@@ -77,7 +77,7 @@ const Items = () => {
     try {
       const token = await localStorage.getItem("token");
       const data = {
-        item_id: Object.keys(selected)[0],
+        itemId: Object.keys(selected)[0],
         min_increment: minInc,
         min_bid: minBid,
         end_date: new Date(deadline),

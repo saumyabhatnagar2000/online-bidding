@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
       immutable: true,
+      lowercase: true,
     },
     active: {
       type: Boolean,

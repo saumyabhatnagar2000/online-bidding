@@ -17,6 +17,7 @@ const NavBar = () => {
       const token = await localStorage.getItem("token");
       const role = await localStorage.getItem("role");
       setToken(token);
+      console.log(!token);
       setRole(role);
     })();
   }, []);
@@ -74,9 +75,9 @@ const NavBar = () => {
           <Link className="btn btn-outline-light  w-21" to="/additem">
             Add Item
           </Link>
-        ) : <Link className="btn btn-outline-light  w-21" to="/additem">
-        Add Item
-      </Link>}
+        ) : (
+          <></>
+        )}
         {token ? (
           <Link
             className="btn btn-outline-light ms-1 w-21"
