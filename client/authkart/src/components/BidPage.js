@@ -121,12 +121,22 @@ const Bidding = () => {
             setMinBid(min_bid + bidData?.listing_id?.min_increment);
           }}
         ></i>
+        {biddingStart ? (
+          <h4 style={{ color: "blue" }}>
+            Current Bid: ₹
+            {min_bid > allBiddings[0].bid_amount
+              ? min_bid
+              : allBiddings[0].bid_amount}
+          </h4>
+        ) : (
+          <></>
+        )}
         <br />
         <br />
         {!biddingStart ? (
-          <p>
-            This bidding has ended or not started yet Please check after
-            sometime
+          <p style={{ color: "red" }}>
+            This bidding has ended or not started yet. Please check after
+            sometime.
           </p>
         ) : null}
         <button
@@ -152,7 +162,7 @@ const Bidding = () => {
               <tr>
                 <th scope="row">{index + 1}</th>
                 <td style={{}}>{item.user_id.email}</td>
-                <td>{item.bid_amount}</td>
+                <td>₹{item.bid_amount}</td>
               </tr>
             );
           })}
